@@ -20,6 +20,10 @@ public class HotelController {
         return "This is the hotel";
     }
 
+    @RequestMapping("/pay")
+    public String pay(){
+        return "pay";
+    }
 
 
 
