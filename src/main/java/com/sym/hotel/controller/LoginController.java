@@ -14,4 +14,8 @@ public class LoginController {
     public ResponseResult Login(@RequestBody Guest guest){
         return loginService.login(guest);
     }
+    @RequestMapping("/user/logout")
+    public ResponseResult Logout(){
+        return loginService.logout();
+    }
 }
