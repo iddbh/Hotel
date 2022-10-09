@@ -1,4 +1,4 @@
-package com.sym.hotel.Service.impl;
+package com.sym.hotel.Service.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sym.hotel.domain.LoginGuest;

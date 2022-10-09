@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
-    private Class<T> clazz;
+    private final Class<T> clazz;
 
     static {
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
@@ -26,12 +26,15 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     public byte[] serialize(T t) throws SerializationException {
         if (t == null) {
             return new byte[0];
-        }
-        return JSON.toJSONString(t, SerializerFeature.valueOf(String.valueOf(SerializerFeature.WriteClassName))).getBytes(DEFAULT_CHARSET);
+		}return JSON.toJSONString(t, SerializerFeature.WriteClassName).getBytes(DEFAULT_CHARSET);
     }
 
     @Override
     public T deserialize(byte[] bytes) throws SerializationException {
-        return null;
+        if(bytes==null||bytes.length==0){
+            return null;
+        }
+        String s =new String(bytes,DEFAULT_CHARSET);
+        return JSON.parseObject(s,clazz);
     }
 }
