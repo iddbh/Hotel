@@ -1,0 +1,26 @@
+.logs{
+    width: 800px;
+    margin: 16px;
+    padding: 20px;
+    background-color: #bfa;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgb(0,0,0,.3);
+  
+  
+  }
+  .content{
+    flex: auto;
+    /* background-color: #bfa; */
+    text-align: center;
+  }
+  
+  .desc{
+    color: #0a5b9d;
+    font-size: 20px;
+  
+  }
+  
+  .time{
+    font-weight: bold;
+    
+  }

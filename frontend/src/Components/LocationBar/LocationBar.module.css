@@ -1,0 +1,160 @@
+.locationBar {
+    /* width: 100vw; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* height: 23vh; */
+    margin: 5px 0;
+    padding: 0 9vw;
+    background-color: white;
+    box-shadow: 0 0 10px rgb(0, 0, 0,.3);
+}
+
+.locationInfo{
+    display: flex;
+    width: 81vw;
+    justify-content: space-between;
+    align-items: center;
+    height: 15vh;
+    /* margin: 0 9vw; */
+    /* background-color: #bfa; */
+    border-bottom: 1px #dfdfdf solid;
+}
+
+.destInfo, .lodgingInfo, .roomInfo{
+    width: 20vw;
+    height: 100%;
+    padding: 1vw;
+    /* background-color: #bfa; */
+}
+
+.destInfo1, .lodgingInfo1, .roomInfo1{
+    /* align-items: center; */
+    width: 18vw;
+    padding-top: 1vw;
+    /* padding-left: 1vw; */
+    font-size: 1vh;
+}
+.destInfo2, .lodgingInfo2, .roomInfo2{
+    /* align-items: center; */
+    width: 18vw;
+    padding : 1vw 0;
+    font-size: 2vh;
+}
+
+.editInfo{
+    display: flex;
+    flex-direction: column;
+    width: 81vw;
+    height: 40vh;
+    border-bottom: 1px #dfdfdf solid;
+
+    /* background-color: #bfa; */
+
+}
+.closeArea{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 3vw;
+    width: 100%;
+    height: 4vh;
+    margin: 1vh auto;
+    /* border-bottom: 1px #dfdfdf solid; */
+    /* background-color: #fff; */
+}
+
+.closeBtn{
+    background-color: #fff;
+    border: none;
+}
+
+.formBlock{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    height: 20vh;
+    padding: 1vw;
+    /* border-bottom: 1px #dfdfdf solid; */
+
+    
+}
+.editBlock{
+    /* display: flex; */
+    margin: 2vh 0;
+    width: 20vw;
+    height: 100%;
+    /* background-color: lightpink; */
+}
+.editNotice{
+    /* display: block; */
+    width: 100%;
+    margin: .5vh 0;
+    /* background-color: #bfa; */
+}
+.addrText{
+    width: 100%;
+    height: 7vh;
+    font-size: 2vh;
+}
+.dateText{
+    width: 9vw;
+    height: 7vh;
+    font-size: 2vh;
+}
+.roomText{
+    width: 9vw;
+    margin: 0 .2vw;
+    height: 7vh;
+    font-size: 2vh;
+}
+
+.searchArea{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 10vh;
+    /* background-color: #bfa; */
+    padding:0 3vw;
+}
+
+.searchBtn, .sureBtn{
+    width: 15vw;
+    height: 5vh;
+    background-color: #444054;
+    font-size: 2vh;
+    border: none;
+    color: #fff;
+    margin: 0 1vw;
+}
+.searchBtn:hover, .sureBtn:hover{
+    background-color: #696676;
+    
+}
+
+
+
+
+
+
+.editInfoBtn{
+    width:10vw;
+    height: 5vh;
+    background-color: #fff;
+    font-size: 2vh;
+}
+.editInfoBtn:hover{
+    background-color: #444054;
+    color: #fff;
+    border: none;
+}
+
+.mapInfo {
+    display: flex;
+    width: 90%;
+    margin: 1vh 0;
+    height: 5vh;
+}
+
+

@@ -1,0 +1,40 @@
+.Loginbox {
+    background-color: skyblue;
+    width: 500px;
+    display: inline-block;
+    vertical-align: top
+}
+
+.Regbox {
+    background-color: red;
+    width: 500px;
+    display: inline-block;
+    vertical-align: top
+}
+
+.pic {
+    background-color: yellow;
+    height: 200px;
+}
+
+.LoginTab input {
+    font-size: 10px;
+    width: 200px;
+}
+
+.LoginTab .subtitle {
+    font-size: 10px;
+}
+
+a {
+    background-color: #e8e8e8;
+    text-decoration: none;
+}
+
+.subBtn {
+    margin: auto;
+}
+
+a:hover {
+    color: skyblue;
+}

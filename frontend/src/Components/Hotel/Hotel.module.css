@@ -1,0 +1,77 @@
+.hotelBlocks {
+    height: 30vh;
+    margin: 3vh 10vw;
+    background-color: white;
+    box-shadow: 0 0 10px rgb(0, 0, 0,.3);
+}
+
+.hotelInfo {
+    display: flex;
+    border-bottom: 1px #dfdfdf solid;
+    height: 20vh;
+    
+}
+
+.hotelImg {
+    height: 20vh;
+    width: 15vw;
+    /* background-color: #f2f2f2; */
+}
+
+.hotelNameCN {
+    color: #000;
+    font-size: 2.5vh;
+    margin: .3vh;
+    font-weight: bold;
+}
+.hotelNameEN {
+    color: #000;
+    font-size: 2vh;
+    margin: .3vh;
+    font-weight: bold;
+}
+.hotelAddr {
+    font-size: 1.5vh;
+    margin: .3vh;
+    color: #494949;
+    /* font-weight: bold; */
+}
+.hotelIntro {
+    font-size: 1vh;
+    margin: 1vh .3vh;
+    color: #494949;
+}
+.hotelLogo {
+    height: 20vh;
+    width: 20vw;
+    background-color: #f2f2f2;    
+}
+.hotelBooking {
+    /* display: flex; */
+    height: 10vh;
+}
+.hotelBookingBtn {
+    float: right;
+    margin: 2.5vh 4vw;
+    height: 5vh;
+    width: 10vw;
+    background-color: #444054;
+    font-size: 2vh;
+    border: none;
+    color: #fff;
+}
+
+.hotelBookingBtn:hover {
+    background-color: #696676;
+}
+
+
+.hotelDetail {
+    width: 45vw;
+    display: flex;
+    flex-flow: column;
+    /* background-color: #bfa; */
+    padding: 3vh;
+
+
+}
