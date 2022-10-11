@@ -1,40 +1,208 @@
 .Loginbox {
-    background-color: skyblue;
-    width: 500px;
-    display: inline-block;
-    vertical-align: top
+    /* display: flex; */
+    position: relative;
+    top: 10vh;
+    left: 35vw;
+    background-color: #f5f8f7;
+    /* opacity: .7; */
+    /* width: 500px; */
+    
+    display: flex;
+    width: 30vw;
+    height: 60vh;
+    flex-direction: column;
+    vertical-align: top;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgb(0, 0, 0,.3);
+
+    
 }
+
+.loginTitle{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.loginTab{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 40vh;
+    /* background-color: #bfa; */
+    padding:4vh 1vw;
+
+}
+
+.formRow1{
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    width: 27vw;
+    height: 8vh;
+    padding: 0 1vw;
+    /* background-color: lightpink; */
+}
+
+.noticeInfo1, .noticeInfo2{
+    color: #000;
+    font-weight: bold;
+    font-size: 2vh;
+    margin-right: 2vw;
+    
+
+}
+.noticeInfo1{
+    margin-left: 1vw;
+}
+
+.inputText1, .inputText2{
+    width: 15vw;
+    height: 4vh;
+    border-radius: 10px;
+    font-size: 1vh; 
+    border: 1px solid #000;
+    
+
+}
+
+.inputText1{
+    margin-left: 1.2vw;
+}
+
+.btnBox{
+    margin-top: 5vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 10vh;
+    /* background-color: lightpink; */
+    padding: 2vw 2vh;
+
+
+}
+
+.btn1{
+    width: 8vw;
+    height: 5vh;
+    border:none;
+    border-radius: 4px;
+    background-color: #000;
+    color: #fff;
+    font-size: 1.5vh;
+    font-weight: bolder;
+    transition: .5s;
+
+
+}
+
+.btn1:hover{
+    color: #000;
+    background-color: #f5f8f7;
+}
+
+.forgetNotice{
+    display: flex;
+    /* background-color: #bfa; */
+    justify-content: flex-end;
+    margin-right: 4vw;
+    font-size: 1vh;
+    color: #6b707a;
+    text-decoration:underline;
+
+}
+.forgetNotice:hover{
+    color: #000;
+    text-decoration: solid;
+}
+
+body{
+    /* background: linear-gradient(#451ce8, #de3409 , #1d0777 ); */
+    background-image: url(D:\ReactJs\ooad-hotel\public\sea-gca97c86ff_1280.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+}
+
+
+
 
 .Regbox {
-    background-color: red;
-    width: 500px;
+    display: flex;
+    height: 20vh;
+    position: fixed;
+    bottom: 0px;    
+    left: 0px;
+    background-color: #f5f8f7;
+    width: 100%;
+    /* vertical-align: top */
+    padding-left: 3vw;
+    padding-right: 3vw;
+    box-shadow: 0 0 10px rgb(0, 0, 0, .3);
+
+
+}
+
+.head1{
+    /* display: inline-block; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    font-size: 6vh;
+    font-weight: bold;
+    color: #fff;
+    height: 100%;
+    width: 20%;
+    margin-right: 4vw;
+    transition: .5s;
+    /* transition: font 100; */
+
+
+}
+.head1:hover{
+    background-color: #f5f8f7;
+    color: #000;
+}
+
+.slogan{
+    display: flex;
+    justify-content:flex-start;
+    width: 80%;
+    /* background-color: lightblue; */
+    /* border: 3px solid; */
+    height: 100%;
+    padding-left:  4vw;
+    padding-top: 2vh;
+
+}
+
+.sloganLi{
     display: inline-block;
-    vertical-align: top
+    width: 25vw;
+    height: 5vh;
+    /* background-color: #bfa; */
+    margin-top: 1vh;
+    margin-left: .5vw;
+    font-size: 2vh;
+    font-weight: bold;
+    padding-top: 1vh;
+    /* padding: 1vh, 0; */
+
+    /* text-align: center; */
 }
 
-.pic {
-    background-color: yellow;
-    height: 200px;
-}
 
-.LoginTab input {
-    font-size: 10px;
-    width: 200px;
-}
 
-.LoginTab .subtitle {
-    font-size: 10px;
-}
+
 
 a {
-    background-color: #e8e8e8;
     text-decoration: none;
 }
 
-.subBtn {
-    margin: auto;
-}
 
-a:hover {
-    color: skyblue;
+li{
+    list-style: none;
 }

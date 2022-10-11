@@ -5,47 +5,65 @@ class Login extends React.Component {
     render() {
 
         return (
-            <>
-                <h1>Welcome!</h1>
-                <div>
-                    <div className={styles.Loginbox}>
-                        <h1>Log in</h1>
-                        <form className={styles.LoginTab} name="LoginTab" action="#" >
+            <div>
+
+
+                <div className={styles.Loginbox}>
+                    <div className={styles.loginTitle}><h1 >Log in</h1></div>
+
+                    <div className={styles.loginForm}>
+                        <form className={styles.loginTab} name="LoginTab" action="#" >
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td className={styles.subtitle}>UserName:</td>
-                                        <td><input type='text' placeholder="your phone number or mail address"></input></td>
+                                        <div className={styles.formRow1}>
+                                            <span className={styles.noticeInfo1}>name:</span>
+                                            <input className={styles.inputText1} type='text' placeholder="phone number or email"></input>
+                                        </div>
                                     </tr>
                                     <tr>
-                                        <td className={styles.subtitle}>Password:</td>
-                                        <td><input type='password' placeholder="password" ></input></td>
+                                        <div className={styles.formRow1}>
+                                            <span className={styles.noticeInfo2}>password:</span>
+                                            <input className={styles.inputText2} type='password'  placeholder="password"></input>
+                                        </div>
                                     </tr>
                                 </tbody>
                             </table>
-                            <input type='submit' value='submit' className={styles.subBtn}></input>
-                            <input type='reset' value='reset'></input>
+                            <div className={styles.btnBox}>
+                                <input type='submit' value='submit' className={styles.btn1}></input>
+                            <input type='reset' value='reset' className={styles.btn1}></input>
+                            </div>
+                            
                         </form>
-                        <a href="#">forget your password?</a>
+
                     </div>
-                    <div className={styles.Regbox}>
-                        <h1>Join us!</h1>
-                        <div className="pic"></div>
-                        <ul>
-                            <li>
-                                enjoy free Wi-Fi!
-                            </li>
-                            <li>
-                                more present!
-                            </li>
-                            <li>
-                                Irregular discount!
-                            </li>
-                        </ul>
-                        <a href="#">Register</a>
-                    </div>
+                    <a href="#" className={styles.forgetNotice}>forget your password?</a>
+
+
+                    
                 </div>
-            </>
+
+                <div className={styles.Regbox}>
+                    <div className={styles.slogan}>
+                        <ul>
+                            <span className={styles.sloganLi}>
+                                -enjoy free Wi-Fi!
+                            </span>
+                            <span className={styles.sloganLi}>
+                                -more present!
+                            </span><br />
+                            <span className={styles.sloganLi}>
+                                -Irregular discount!
+                            </span>
+                            <span className={styles.sloganLi}>
+                                -for more benefits, join now!
+                            </span>
+                        </ul>
+                    </div>
+                    <a className={styles.head1} href="#">Join us!</a>
+                </div>
+
+            </div>
         )
     }
 
