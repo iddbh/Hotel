@@ -1,17 +1,24 @@
 package com.sym.hotel.controller;
 
-import com.sym.hotel.api.ApiResponse;
-import com.sym.hotel.pojo.Hotel;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.sym.hotel.Service.HotelService;
+
+import com.sym.hotel.Service.HotelService;
+import com.sym.hotel.domain.ResponseResult;
+
+import com.sym.hotel.pojo.Room;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 public class HotelController {
-//    public ApiResponse addHotel(@RequestBody Hotel hotel){
-//
-//    }
+    @Autowired
+    private HotelService hotelService;
+    @PostMapping("/user/book")
+    public ResponseResult Book(@RequestBody Room room, @RequestBody Date date){
+        return hotelService.book(room,date);
+    }
+
+
 }

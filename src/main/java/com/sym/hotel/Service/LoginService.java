@@ -5,6 +5,5 @@ import com.sym.hotel.pojo.Guest;
 
 public interface LoginService {
     ResponseResult login(Guest guest);
-
     ResponseResult logout();
 }
