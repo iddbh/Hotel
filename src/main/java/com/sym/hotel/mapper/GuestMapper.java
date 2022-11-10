@@ -6,4 +6,5 @@ import com.sym.hotel.pojo.Guest;
 import org.springframework.context.annotation.Bean;
 
 public interface GuestMapper extends MPJBaseMapper<Guest> {
+
 }

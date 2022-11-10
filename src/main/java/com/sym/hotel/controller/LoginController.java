@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
     @Autowired
     private LoginService loginService;
+
+    
+
     @PostMapping("/user/login")
     public ResponseResult Login(@RequestBody Guest guest){
         return loginService.login(guest);
