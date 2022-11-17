@@ -11,5 +11,5 @@ public class Hotel {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer cityId;
-    private String name;
+    private String house_type;
 }

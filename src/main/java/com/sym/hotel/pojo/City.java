@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 public class City {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String Name;
+    private String city;
+    private String province;
+    private String block;
 }
