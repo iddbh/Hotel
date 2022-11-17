@@ -3,6 +3,7 @@ package com.sym.hotel.Service.imp;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.mapper.GuestMapper;
+import com.sym.hotel.mapper.RoomMapper;
 import com.sym.hotel.pojo.Guest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,9 @@ import java.util.Objects;
 public class GuestService implements UserDetailsService {
     @Autowired
     private GuestMapper guestMapper;
+    @Autowired
+    private RoomMapper roomMapper;
+
 
 
     @Override

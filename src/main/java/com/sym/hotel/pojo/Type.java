@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+public class Type {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String location;
-    private Integer roomTypeId;
+    private String roomType;
+    private Integer hotelId;
+    private double price;
+
 }
