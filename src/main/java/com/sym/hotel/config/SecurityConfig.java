@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .and().authorizeRequests()
                 .antMatchers("/user/**").anonymous()
                 .antMatchers("/public/**").permitAll()
-                .antMatchers(("/guest/**")).authenticated()//待定
+                .antMatchers("/guest/**").authenticated()//待定 用于注册后使用
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
