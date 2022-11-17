@@ -10,6 +10,6 @@ import lombok.*;
 public class Hotel {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private Integer cityId;
-    private String house_type;
+    private String name;
+    private Integer locationId;
 }

@@ -5,27 +5,28 @@ import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Util.JwtUtil;
 import com.sym.hotel.Util.RedisCache;
 import com.sym.hotel.domain.ResponseResult;
+import com.sym.hotel.mapper.HotelMapper;
 import com.sym.hotel.mapper.RecordMapper;
 import com.sym.hotel.mapper.RoomMapper;
-import com.sym.hotel.pojo.Guest;
+import com.sym.hotel.pojo.*;
 import com.sym.hotel.pojo.Record;
-import com.sym.hotel.pojo.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class HotelServiceImpl implements HotelService {
     @Autowired
     RoomMapper roomMapper;
     @Autowired
+    HotelMapper hotelMapper;
+    @Autowired
     RecordMapper recordMapper;
     @Autowired
     RedisCache redisCache;
+
     @Override
     public ResponseResult book(Room room, Date date) {
         //Todo:Test
@@ -46,6 +47,19 @@ public class HotelServiceImpl implements HotelService {
         }
         Record record = new Record(null, guestId, room.getId(), date);
         recordMapper.insert(record);
-        return new ResponseResult(200,"ok");
+        return new ResponseResult(200, "ok");
+    }
+
+    @Override
+    public ResponseResult hotelsOfCity(Location location) {
+        //Todo:Test
+        int locationId = location.getId();
+        LambdaQueryWrapper<Hotel> hotelLambdaQueryWrapper = new LambdaQueryWrapper<Hotel>().eq(Hotel::getLocationId, locationId);
+        List<Hotel> allHotelsOfCity = hotelMapper.selectList(hotelLambdaQueryWrapper);
+        Map<String, String> maps = new HashMap<>();
+        for (int i = 0; i < allHotelsOfCity.size(); i++) {
+            maps.put("Hotels"+(i+1), String.valueOf(allHotelsOfCity.get(i)));
+        }
+        return new ResponseResult(200,"OK",maps);
     }
 }
