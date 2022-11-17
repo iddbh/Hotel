@@ -1,10 +1,14 @@
 package com.sym.hotel.Service.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.mapper.GuestMapper;
 import com.sym.hotel.mapper.RoomMapper;
+import com.sym.hotel.mapper.TyperMapper;
 import com.sym.hotel.pojo.Guest;
+import com.sym.hotel.pojo.Room;
+import com.sym.hotel.pojo.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +26,8 @@ public class GuestService implements UserDetailsService {
     private GuestMapper guestMapper;
     @Autowired
     private RoomMapper roomMapper;
+    @Autowired
+    private TyperMapper typeMapper;
 
 
 
@@ -39,5 +45,12 @@ public class GuestService implements UserDetailsService {
         List<String> list=new ArrayList<>(Arrays.asList("test","admin"));
         //把数据封装成UserDetails返回
         return new LoginGuest(guest,list);
+    }
+
+    public List<Room> selectRoomByPrice(Double minMoney,Double maxMoney){
+        List<Room> list=roomMapper.selectJoinList(Room.class,
+                new MPJLambdaWrapper<Room>().selectAll(Room.class).select(Type::getPrice)
+                        .leftJoin(Type.class,Type::getId,Room::getRoomTypeId).gt(Type::getPrice,minMoney).le(Type::getPrice,maxMoney));
+        return list;
     }
 }
