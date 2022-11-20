@@ -8,6 +8,7 @@ import com.sym.hotel.domain.ResponseResult;
 import com.sym.hotel.mapper.HotelMapper;
 import com.sym.hotel.mapper.RecordMapper;
 import com.sym.hotel.mapper.RoomMapper;
+import com.sym.hotel.mapper.TypeMapper;
 import com.sym.hotel.pojo.*;
 import com.sym.hotel.pojo.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class HotelServiceImpl implements HotelService {
     HotelMapper hotelMapper;
     @Autowired
     RecordMapper recordMapper;
+    @Autowired
+    TypeMapper typeMapper;
     @Autowired
     RedisCache redisCache;
 
@@ -59,6 +62,19 @@ public class HotelServiceImpl implements HotelService {
         Map<String, String> maps = new HashMap<>();
         for (int i = 0; i < allHotelsOfCity.size(); i++) {
             maps.put("Hotels"+(i+1), String.valueOf(allHotelsOfCity.get(i)));
+        }
+        return new ResponseResult(200,"OK",maps);
+    }
+
+    @Override
+    public ResponseResult hotelInfo(Hotel hotel) {
+        //TODO:test
+        int hotelId = hotel.getId();
+        LambdaQueryWrapper<Type> typeLambdaQueryWrapper = new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId);
+        List<Type> allTypeOfHotel = typeMapper.selectList(typeLambdaQueryWrapper);
+        Map<String, String> maps = new HashMap<>();
+        for (int i = 0; i < allTypeOfHotel.size(); i++) {
+            maps.put("Types"+(i+1), String.valueOf(allTypeOfHotel.get(i)));
         }
         return new ResponseResult(200,"OK",maps);
     }

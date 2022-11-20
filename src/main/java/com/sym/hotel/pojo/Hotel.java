@@ -7,6 +7,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Hotel {
     @TableId(type = IdType.AUTO)
     private Integer id;

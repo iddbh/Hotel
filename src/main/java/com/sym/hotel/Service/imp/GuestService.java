@@ -5,7 +5,7 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.mapper.GuestMapper;
 import com.sym.hotel.mapper.RoomMapper;
-import com.sym.hotel.mapper.TyperMapper;
+import com.sym.hotel.mapper.TypeMapper;
 import com.sym.hotel.pojo.Guest;
 import com.sym.hotel.pojo.Room;
 import com.sym.hotel.pojo.Type;
@@ -27,7 +27,7 @@ public class GuestService implements UserDetailsService {
     @Autowired
     private RoomMapper roomMapper;
     @Autowired
-    private TyperMapper typeMapper;
+    private TypeMapper typeMapper;
 
 
 
