@@ -22,8 +22,8 @@ public class HotelController {
     private HotelService hotelService;
     @Autowired GuestService guestService;
     @PostMapping("/book")
-    public ResponseResult Book(@RequestBody Room room, @RequestBody Date date){
-        return hotelService.book(room,date);
+    public ResponseResult Book(@RequestBody Room room, @RequestBody Date start,@RequestBody Date end){
+        return hotelService.book(room,start,end);
     }
     @PostMapping("/selectHotel")
     public ResponseResult hotelsOfCity(@RequestBody Location location){

@@ -16,5 +16,6 @@ public class Record {
     private Integer id;
     private Integer guestId;
     private Integer roomId;
-    private Date bookTime;
+    private Date bookStartTime;
+    private Date bookEndTime;
 }

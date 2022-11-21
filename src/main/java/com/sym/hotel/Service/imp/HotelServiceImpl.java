@@ -1,6 +1,7 @@
 package com.sym.hotel.Service.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Util.JwtUtil;
 import com.sym.hotel.Util.RedisCache;
@@ -31,7 +32,7 @@ public class HotelServiceImpl implements HotelService {
     RedisCache redisCache;
 
     @Override
-    public ResponseResult book(Room room, Date date) {
+    public ResponseResult book(Room room, Date start,Date end) {
         //Todo:Test
         int guestId = (int) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         LambdaQueryWrapper<Room> roomWrapper = new LambdaQueryWrapper<Room>()
@@ -40,15 +41,25 @@ public class HotelServiceImpl implements HotelService {
         if (Objects.isNull(room1)) {
             throw new RuntimeException("房间号不存在");
         }
-        LambdaQueryWrapper<Record> recordWrapper = new LambdaQueryWrapper<Record>()
-                .eq(Record::getRoomId, room.getId())
-                .eq(Record::getBookTime, date);
+//        LambdaQueryWrapper<Record> recordWrapper = new LambdaQueryWrapper<Record>()
+//                .eq(Record::getRoomId, room.getId())
+//                .eq(Record::getBookTime, date);
         //Todo:Time
-        Record selectedRecord = recordMapper.selectOne(recordWrapper);
+        Record selectedRecord=recordMapper.selectOne(
+                new MPJLambdaWrapper<Record>().selectAll(Record.class)
+                        .eq(Record::getRoomId, room.getId())
+                        .and(x->x.lt(Record::getBookStartTime,end).ge(Record::getBookEndTime,end)
+                                .or(e->e.le(Record::getBookStartTime,start).gt(Record::getBookEndTime,start))));
+
+//        Record selectedRecord = recordMapper.selectOne(recordWrapper);
         if (Objects.isNull(selectedRecord)) {
             throw new RuntimeException("时间冲突");
         }
-        Record record = new Record(null, guestId, room.getId(), date);
+        Record record=new Record();
+        record.setGuestId(guestId);
+        record.setRoomId(room.getId());
+        record.setBookStartTime(start);
+        record .setBookEndTime(end);
         recordMapper.insert(record);
         return new ResponseResult(200, "ok");
     }

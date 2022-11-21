@@ -8,7 +8,7 @@ import com.sym.hotel.pojo.Room;
 import java.util.Date;
 
 public interface HotelService {
-    ResponseResult book(Room room, Date date);
+    ResponseResult book(Room room, Date date1,Date date2);
     ResponseResult hotelsOfCity(Location location);
     ResponseResult hotelInfo(Hotel hotel);
 }
