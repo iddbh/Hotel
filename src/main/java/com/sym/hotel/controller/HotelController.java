@@ -6,8 +6,10 @@ import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Service.imp.GuestService;
 import com.sym.hotel.domain.ResponseResult;
 
+import com.sym.hotel.pojo.Hotel;
 import com.sym.hotel.pojo.Location;
 import com.sym.hotel.pojo.Room;
+import com.sym.hotel.pojo.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,10 @@ public class HotelController {
     @PostMapping("/selectHotel")
     public ResponseResult hotelsOfCity(@RequestBody Location location){
         return hotelService.hotelsOfCity(location);
+    }
+    @PostMapping("hotelInfo")
+    public List<Type> hotelInfo(@RequestBody Hotel hotel){
+        return hotelService.hotelInfo(hotel);
     }
 
 }

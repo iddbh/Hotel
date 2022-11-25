@@ -3,7 +3,6 @@ package com.sym.hotel.Service.imp;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.Service.HotelService;
-import com.sym.hotel.Util.JwtUtil;
 import com.sym.hotel.Util.RedisCache;
 import com.sym.hotel.domain.ResponseResult;
 import com.sym.hotel.mapper.HotelMapper;
@@ -78,15 +77,11 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseResult hotelInfo(Hotel hotel) {
+    public List<Type> hotelInfo(Hotel hotel) {
         //TODO:test
         int hotelId = hotel.getId();
         LambdaQueryWrapper<Type> typeLambdaQueryWrapper = new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId);
         List<Type> allTypeOfHotel = typeMapper.selectList(typeLambdaQueryWrapper);
-        Map<String, String> maps = new HashMap<>();
-        for (int i = 0; i < allTypeOfHotel.size(); i++) {
-            maps.put("Types"+(i+1), String.valueOf(allTypeOfHotel.get(i)));
-        }
-        return new ResponseResult(200,"OK",maps);
+        return allTypeOfHotel;
     }
 }

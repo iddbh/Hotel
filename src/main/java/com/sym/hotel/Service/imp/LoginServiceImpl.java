@@ -28,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
         if (Objects.isNull(authenticate)) {
-            throw new RuntimeException("登录失败");
+            return new ResponseResult(200, "登陆失败");
         }
         LoginGuest loginGuest= (LoginGuest) authenticate.getPrincipal();
         String userId=loginGuest.getGuest().getId().toString();
