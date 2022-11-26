@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-/activation-1.1.1.jar
-/javax.mail.jar
-/src/main/resources/static/mail.properties
-/src/main/resources/static/message.txt
