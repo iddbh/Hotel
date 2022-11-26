@@ -16,4 +16,5 @@ public class Guest {
     private Integer id;
     private String name;
     private String password;
+    private String email;
 }

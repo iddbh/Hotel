@@ -3,6 +3,7 @@ package com.sym.hotel.Service.imp;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sym.hotel.Service.RegisterService;
 import com.sym.hotel.Util.JwtUtil;
+import com.sym.hotel.Util.MailTest;
 import com.sym.hotel.Util.RedisCache;
 import com.sym.hotel.domain.ResponseResult;
 import com.sym.hotel.mapper.GuestMapper;
@@ -13,7 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -23,14 +27,18 @@ public class RegisterServiceImpl implements RegisterService {
     private RedisCache redisCache;
     @Autowired
     private ManagerMapper managerMapper;
+    @Override
+    public String sendCode(String email) throws MessagingException, IOException {
+        Guest selectOne = guestMapper.selectOne(new LambdaQueryWrapper<Guest>()
+                .eq(Guest::getEmail, email));
+        if (selectOne != null) {
+            return "用户名已存在";
+        }
+        return MailTest.sendMail(email);
+    }
 
     @Override
     public ResponseResult register(Guest guest) {
-        Guest selectOne = guestMapper.selectOne(new LambdaQueryWrapper<Guest>()
-                .eq(Guest::getName, guest.getName()));
-        if (selectOne != null) {
-            return new ResponseResult(400, "用户名已存在");
-        }
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encode = bCryptPasswordEncoder.encode(guest.getPassword().toString());
         guest.setPassword(encode);
