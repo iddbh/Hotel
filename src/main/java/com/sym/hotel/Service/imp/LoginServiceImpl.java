@@ -25,16 +25,17 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public ResponseResult login(Guest guest) {
         UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(guest.getName(),guest.getPassword());
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
-        if (Objects.isNull(authenticate)) {
+        try {
+            Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+            LoginGuest loginGuest= (LoginGuest) authenticate.getPrincipal();
+            String userId=loginGuest.getGuest().getId().toString();
+            String jwt= JwtUtil.createJwt(userId);
+            redisCache.setCacheObject("login:"+userId,loginGuest);
+            return new ResponseResult(200,"登录成功", Map.of("token",jwt));
+        }
+        catch (Exception e){
             return new ResponseResult(200, "登陆失败");
         }
-        LoginGuest loginGuest= (LoginGuest) authenticate.getPrincipal();
-        String userId=loginGuest.getGuest().getId().toString();
-        String jwt= JwtUtil.createJwt(userId);
-        redisCache.setCacheObject("login:"+userId,loginGuest);
-        return new ResponseResult(200,"登录成功", Map.of("token",jwt));
     }
 
     @Override
