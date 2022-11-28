@@ -1,4 +1,4 @@
-12011941@mail.sustech.edu.cn
+12010601@mail.sustech.edu.cn
 12011941@mail.sustech.edu.cn
 Test sending email using JavaMail
 Dear user:

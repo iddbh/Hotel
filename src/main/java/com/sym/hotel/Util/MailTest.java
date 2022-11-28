@@ -43,7 +43,7 @@ public class MailTest
 
 
         // read password for your email account
-        String password = "sus16920Tech";
+        String password = "chenYIshu123";
 
 
         Session mailSession = Session.getDefaultInstance(props);
