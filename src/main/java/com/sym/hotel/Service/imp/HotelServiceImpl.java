@@ -78,7 +78,6 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public List<Type> hotelInfo(Hotel hotel) {
-        //TODO:test
         int hotelId = hotel.getId();
         LambdaQueryWrapper<Type> typeLambdaQueryWrapper = new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId);
         List<Type> allTypeOfHotel = typeMapper.selectList(typeLambdaQueryWrapper);
