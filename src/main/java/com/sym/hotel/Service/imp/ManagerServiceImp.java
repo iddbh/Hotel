@@ -28,7 +28,7 @@ public class ManagerServiceImp {
                 .set(Type::getPrice,price)
                 .set(Type::getService,message)
                 .eq(Type::getId,id)
-                .eq(Type::getHotelId,hotelId));
+                .eq(Type::getHotelId,hotelId);
         typeMapper.update(oldType,updateWrapper);
         return new ResponseResult(200,"更改成功");
     }
