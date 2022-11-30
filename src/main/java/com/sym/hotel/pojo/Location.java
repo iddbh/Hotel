@@ -14,5 +14,4 @@ public class Location {
     private Integer id;
     private String city;
     private String province;
-    private String block;
 }
