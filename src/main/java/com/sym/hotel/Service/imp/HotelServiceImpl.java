@@ -69,6 +69,9 @@ public class HotelServiceImpl implements HotelService {
         int locationId = location.getId();
         LambdaQueryWrapper<Hotel> hotelLambdaQueryWrapper = new LambdaQueryWrapper<Hotel>().eq(Hotel::getLocationId, locationId);
         List<Hotel> allHotelsOfCity = hotelMapper.selectList(hotelLambdaQueryWrapper);
+        if (allHotelsOfCity==null){
+            return new ResponseResult(404,"该地区酒店不存在");
+        }
         Map<String, String> maps = new HashMap<>();
         for (int i = 0; i < allHotelsOfCity.size(); i++) {
             maps.put("Hotels"+(i+1), String.valueOf(allHotelsOfCity.get(i)));

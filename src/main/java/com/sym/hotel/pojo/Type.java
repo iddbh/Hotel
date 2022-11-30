@@ -15,5 +15,6 @@ public class Type {
     private String roomType;
     private Integer hotelId;
     private double price;
+    private String Service;
 
 }
