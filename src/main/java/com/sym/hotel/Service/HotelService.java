@@ -11,6 +11,6 @@ import java.util.List;
 
 public interface HotelService {
     ResponseResult book(Room room, Date date1,Date date2);
-    ResponseResult hotelsOfCity(Location location);
+    ResponseResult hotelsOfCity(String location,String name);
     List<Type> hotelInfo(Hotel hotel);
 }

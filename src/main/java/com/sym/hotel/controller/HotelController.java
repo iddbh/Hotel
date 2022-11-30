@@ -28,8 +28,8 @@ public class HotelController {
         return hotelService.book(room,start,end);
     }
     @PostMapping("/selectHotel")
-    public ResponseResult hotelsOfCity(@RequestBody Location location){
-        return hotelService.hotelsOfCity(location);
+    public ResponseResult hotelsOfCity(@RequestParam("local") String location,@RequestParam("name") String name){
+        return hotelService.hotelsOfCity(location,name);
     }
     @PostMapping("hotelInfo")
     public List<Type> hotelInfo(@RequestBody Hotel hotel){

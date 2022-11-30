@@ -64,19 +64,21 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseResult hotelsOfCity(Location location) {
+    public ResponseResult hotelsOfCity(String location,String name) {
         //Todo:Test
-        int locationId = location.getId();
-        LambdaQueryWrapper<Hotel> hotelLambdaQueryWrapper = new LambdaQueryWrapper<Hotel>().eq(Hotel::getLocationId, locationId);
-        List<Hotel> allHotelsOfCity = hotelMapper.selectList(hotelLambdaQueryWrapper);
+        String province=location.split("，")[0];
+        String city=location.split("，")[1];
+
+        List<Hotel> allHotelsOfCity =hotelMapper.selectJoinList(Hotel.class, new MPJLambdaWrapper<Hotel>().selectAll(Hotel.class)
+                .leftJoin(Location.class,Location::getId,Hotel::getLocationId).eq(Location::getCity, city).eq(Location::getProvince,province).like(Hotel::getName,name));
         if (allHotelsOfCity==null){
-            return new ResponseResult(404,"该地区酒店不存在");
+            return new ResponseResult(200,"该地区酒店不存在");
         }
-        Map<String, String> maps = new HashMap<>();
+        List<String> ID=new LinkedList<>();
         for (int i = 0; i < allHotelsOfCity.size(); i++) {
-            maps.put("Hotels"+(i+1), String.valueOf(allHotelsOfCity.get(i)));
+            ID.add(String.valueOf(allHotelsOfCity.get(i).getId()));
         }
-        return new ResponseResult(200,"OK",maps);
+        return new ResponseResult(200,"OK",ID);
     }
 
     @Override
