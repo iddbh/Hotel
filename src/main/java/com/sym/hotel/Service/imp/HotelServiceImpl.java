@@ -65,7 +65,7 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public ResponseResult hotelsOfCity(String location,String name) {
+    public ResponseResult hotelsOfCity(String location, String name) {
         //Todo:Test
         String province=location.split("，")[0];
         String city=location.split("，")[1];

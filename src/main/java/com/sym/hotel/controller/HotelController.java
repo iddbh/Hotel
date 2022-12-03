@@ -11,6 +11,7 @@ import com.sym.hotel.pojo.Location;
 import com.sym.hotel.pojo.Room;
 import com.sym.hotel.pojo.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
@@ -48,6 +49,7 @@ public class HotelController {
     }
     @PostMapping("hotelInfo")
     public List<Type> hotelInfo(@RequestBody Hotel hotel){
+
         return hotelService.hotelInfo(hotel);
     }
 

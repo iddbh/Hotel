@@ -1,19 +1,15 @@
 package com.sym.hotel.Service.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.sym.hotel.Service.imp.returnClass.ReturnRecord;
 import com.sym.hotel.domain.LoginGuest;
-import com.sym.hotel.mapper.GuestMapper;
-import com.sym.hotel.mapper.RecordMapper;
-import com.sym.hotel.mapper.RoomMapper;
-import com.sym.hotel.mapper.TypeMapper;
-import com.sym.hotel.pojo.Guest;
+import com.sym.hotel.mapper.*;
+import com.sym.hotel.pojo.*;
 import com.sym.hotel.pojo.Record;
-import com.sym.hotel.pojo.Room;
-import com.sym.hotel.pojo.Type;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,9 +17,6 @@ import org.springframework.stereotype.Service;
 import com.sym.hotel.domain.ResponseResult;
 
 
-
-
-import javax.xml.crypto.Data;
 import java.util.*;
 
 @Service
@@ -36,6 +29,8 @@ public class GuestService implements UserDetailsService {
     private TypeMapper typeMapper;
     @Autowired
     private RecordMapper recordMapper;
+    @Autowired
+    private HotelMapper hotelMapper;
 //    private UserinfoMapper userinfoMapper;
 
 
@@ -77,6 +72,33 @@ public class GuestService implements UserDetailsService {
         }
         return listID;
     }
+
+    public List<ReturnRecord> viewRecord(){
+        // 这里没有使用连表查询，可以改进。屎山！！！！！！！
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest  = (LoginGuest) authentication.getPrincipal();
+        Integer id = loginGuest.getGuest().getId();
+        LambdaQueryWrapper<Record> recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>().eq(Record::getGuestId, id);
+        List<Record> recordList = recordMapper.selectList(recordLambdaQueryWrapper);
+        List<ReturnRecord> rrl = new ArrayList<>();
+        for (Record re : recordList) {
+            int roomId = re.getRoomId();
+            LambdaQueryWrapper<Room> roomLambdaQueryWrapper = new LambdaQueryWrapper<Room>().eq(Room::getId, roomId);
+            Room room = roomMapper.selectOne(roomLambdaQueryWrapper);
+            int typeId = room.getRoomTypeId();
+            LambdaQueryWrapper<Type> typeLambdaQueryWrapper = new LambdaQueryWrapper<Type>().eq(Type::getId, typeId);
+            Type type = typeMapper.selectOne(typeLambdaQueryWrapper);
+            String typeInfo = type.getRoomType();
+            double price = type.getPrice();
+            int hotelId = type.getHotelId();
+            LambdaQueryWrapper<Hotel> hotelLambdaQueryWrapper = new LambdaQueryWrapper<Hotel>().eq(Hotel::getId, hotelId);
+            Hotel hotel = hotelMapper.selectOne(hotelLambdaQueryWrapper);
+            String hotemName = hotel.getName();
+            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotemName, re.getBookStartTime(), re.getBookEndTime()));
+        }
+        return rrl;
+    }
+
     public ResponseResult bookRoom(Record recordNew){
        Record record=null ;
        record=recordMapper.selectOne(
@@ -89,6 +111,5 @@ public class GuestService implements UserDetailsService {
        }else {
            return new ResponseResult(200,"此房间该时段内已被预订，请您重新选择");
        }
-
     }
 }
