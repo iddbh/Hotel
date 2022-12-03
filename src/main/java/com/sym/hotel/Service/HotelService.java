@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface HotelService {
-    ResponseResult book(Room room, Date date1,Date date2);
+    ResponseResult book(Integer room, Date date1,Date date2);
     ResponseResult hotelsOfCity(String location,String name);
     List<Type> hotelInfo(Hotel hotel);
 }
