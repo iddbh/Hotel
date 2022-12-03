@@ -82,10 +82,8 @@ public class HotelServiceImpl implements HotelService {
         return new ResponseResult(200,"OK",ID);
     }
 
-    public ResponseResult cancelOrder(List<Record> records){
-        for (int i = 0; i < records.size(); i++) {
-            recordMapper.deleteById(records.get(i));
-        }
+    public ResponseResult cancelOrder(Record record){
+            recordMapper.deleteById(record);
         return new ResponseResult(200,"ok","删除成功");
     }
     public ResponseResult modifyOrder(Record record){

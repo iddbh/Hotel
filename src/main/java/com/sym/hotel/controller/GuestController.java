@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/guest")
+@RequestMapping("/user")
 public class GuestController {
     @Autowired
     private GuestService guestService;
@@ -34,7 +34,7 @@ public class GuestController {
 //        return hotelService.modifyOrder(record);
 //    }
     @PostMapping("/cancelorder")
-    public ResponseResult CancelOrder(@RequestBody List<Record> records){
+    public ResponseResult CancelOrder(@RequestBody Record records){
         return hotelService.cancelOrder(records);
     }
 }
