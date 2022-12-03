@@ -24,10 +24,7 @@ import com.sym.hotel.domain.ResponseResult;
 
 
 import javax.xml.crypto.Data;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class GuestService implements UserDetailsService {
@@ -58,11 +55,27 @@ public class GuestService implements UserDetailsService {
         return new LoginGuest(guest,list);
     }
 
-    public List<Room> selectRoomByPrice(Double minMoney,Double maxMoney){
+    public List<Integer> selectRoom(Double minMoney, Double maxMoney, Date startTime, Date endTime){
         List<Room> list=roomMapper.selectJoinList(Room.class,
                 new MPJLambdaWrapper<Room>().selectAll(Room.class).leftJoin(Type.class,Type::getId,Room::getRoomTypeId).select(Type::getPrice)
                         .gt(Type::getPrice,minMoney).le(Type::getPrice,maxMoney));
-        return list;
+        List<Room> listDel=new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            listDel=roomMapper.selectJoinList(Room.class,new MPJLambdaWrapper<Room>().selectAll(Room.class).
+                    leftJoin(Record.class,Record::getRoomId,Room::getId).
+                    select(Record::getBookStartTime,Record::getBookEndTime).
+                    ge(Record::getBookStartTime,startTime).lt(Record::getBookEndTime,startTime).or().lt(Record::getBookStartTime,endTime).ge(Record::getBookEndTime,endTime).or().gt(Record::getBookStartTime,startTime).lt(Record::getBookEndTime,endTime));
+        }
+        HashSet h1 = new HashSet(list);
+        HashSet h2 = new HashSet(listDel);
+        h1.removeAll(h2);
+        list.clear();
+        list.addAll(h1);
+        List<Integer> listID=new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            listID.add(list.get(i).getId());
+        }
+        return listID;
     }
     public ResponseResult bookRoom(Record recordNew){
        Record record=null ;

@@ -13,6 +13,9 @@ import com.sym.hotel.pojo.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,15 @@ public class HotelController {
     @PostMapping("/selectHotel")
     public ResponseResult hotelsOfCity(@RequestParam("local") String location,@RequestParam("name") String name){
         return hotelService.hotelsOfCity(location,name);
+    }
+    @PostMapping("/selectRoom")
+    public List<Integer> hotelInMoneyRange(@RequestParam("minMoney") Double minMoney, @RequestParam("maxMoney") Double maxMoney,
+                                        @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) throws ParseException {
+        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+        Date start = fmt.parse(startTime);
+        Date end = fmt.parse(endTime);
+        return guestService.selectRoom(minMoney,maxMoney,start,end);
+
     }
     @PostMapping("hotelInfo")
     public List<Type> hotelInfo(@RequestBody Hotel hotel){
