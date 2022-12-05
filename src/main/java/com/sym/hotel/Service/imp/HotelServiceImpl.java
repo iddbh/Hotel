@@ -67,8 +67,8 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public ResponseResult hotelsOfCity(String location, String name) {
         //Todo:Test
-        String province=location.split("，")[0];
-        String city=location.split("，")[1];
+        String province=location.split(",")[0];
+        String city=location.split(",")[1];
 
         List<Hotel> allHotelsOfCity =hotelMapper.selectJoinList(Hotel.class, new MPJLambdaWrapper<Hotel>().selectAll(Hotel.class)
                 .leftJoin(Location.class,Location::getId,Hotel::getLocationId).eq(Location::getCity, city).eq(Location::getProvince,province).like(Hotel::getName,name));
