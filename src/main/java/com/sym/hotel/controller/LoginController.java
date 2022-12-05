@@ -15,8 +15,8 @@ public class LoginController {
     
 
     @PostMapping("/user/login")
-    public ResponseResult Login(@RequestBody Guest guest){
-        return loginService.login(guest);
+    public ResponseResult Login(@RequestParam("username") String username,@RequestParam("password") String password){
+        return loginService.login(username, password);
     }
     @RequestMapping("/user/logout")
     public ResponseResult Logout(){
