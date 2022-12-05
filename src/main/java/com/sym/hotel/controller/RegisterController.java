@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 
 @RestController
+@CrossOrigin
 public class RegisterController {
     @Autowired
     private RegisterService registerService;

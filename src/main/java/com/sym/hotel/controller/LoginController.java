@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 public class LoginController {
     @Autowired
     private LoginService loginService;
@@ -14,8 +15,8 @@ public class LoginController {
     
 
     @PostMapping("/user/login")
-    public ResponseResult Login(@RequestBody Guest guest){
-        return loginService.login(guest);
+    public ResponseResult Login(@RequestParam("username") String username,@RequestParam("password") String password){
+        return loginService.login(username, password);
     }
     @RequestMapping("/user/logout")
     public ResponseResult Logout(){

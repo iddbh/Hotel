@@ -19,6 +19,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class GuestController {
     @Autowired
     private GuestService guestService;

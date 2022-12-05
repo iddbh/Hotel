@@ -23,6 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class HotelController {
     @Autowired
     private HotelService hotelService;
