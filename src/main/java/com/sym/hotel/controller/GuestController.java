@@ -24,7 +24,6 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping("/guest")
-@CrossOrigin
 public class GuestController {
     @Autowired
     private GuestService guestService;

@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ManagerService {
     ResponseResult  changeHotelInfo (int id, int hotelId, double price,String Service);
-   List<Record> selectRecordInfo(int guestId,int startTime,int endTime);
+    List<Record> selectRecordInfo(int guestId,int startTime,int endTime);
+
 }

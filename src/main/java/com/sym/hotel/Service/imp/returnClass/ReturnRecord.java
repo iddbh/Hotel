@@ -19,4 +19,5 @@ public class ReturnRecord {
     private String hotelName;
     private Date bookStartTime;
     private Date bookEndTime;
+    private int recordId;
 }

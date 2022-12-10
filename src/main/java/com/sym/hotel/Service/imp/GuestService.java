@@ -94,7 +94,8 @@ public class GuestService implements UserDetailsService {
             LambdaQueryWrapper<Hotel> hotelLambdaQueryWrapper = new LambdaQueryWrapper<Hotel>().eq(Hotel::getId, hotelId);
             Hotel hotel = hotelMapper.selectOne(hotelLambdaQueryWrapper);
             String hotemName = hotel.getName();
-            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotemName, re.getBookStartTime(), re.getBookEndTime()));
+            int recordId = re.getId().hashCode();
+            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotemName, re.getBookStartTime(), re.getBookEndTime(), recordId));
         }
         return rrl;
     }
