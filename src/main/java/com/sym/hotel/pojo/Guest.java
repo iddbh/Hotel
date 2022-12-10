@@ -18,4 +18,6 @@ public class Guest {
     private String password;
     private String email;
     private String root;
+    private Double balance;
+    private Double integral;
 }

@@ -1,14 +1,12 @@
 package com.sym.hotel.Service.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Util.RedisCache;
 import com.sym.hotel.domain.ResponseResult;
-import com.sym.hotel.mapper.HotelMapper;
-import com.sym.hotel.mapper.RecordMapper;
-import com.sym.hotel.mapper.RoomMapper;
-import com.sym.hotel.mapper.TypeMapper;
+import com.sym.hotel.mapper.*;
 import com.sym.hotel.pojo.*;
 import com.sym.hotel.pojo.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +26,23 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     TypeMapper typeMapper;
     @Autowired
+    GuestMapper guestMapper;
+    @Autowired
     RedisCache redisCache;
-
+    public Map selectUserInfo(Integer userId){
+        //Token:userId
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, userId));
+        Map<String, Number> userInfo =new HashMap<>();
+        userInfo.put("userId",userId);
+        userInfo.put("balance",guest.getBalance());
+        userInfo.put("Integral",guest.getIntegral());
+        return userInfo;
+    }
     @Override
-    public ResponseResult book(Integer roomId, Date start,Date end) {
+    public ResponseResult book(Integer roomId, Date start, Date end) {
         //Todo:Test
 //        int guestId = (int) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int guestId=14;
+        int guestId = 14;
         LambdaQueryWrapper<Room> roomWrapper = new LambdaQueryWrapper<Room>()
                 .eq(Room::getId, roomId);
         Room room1 = roomMapper.selectOne(roomWrapper);
@@ -45,50 +53,62 @@ public class HotelServiceImpl implements HotelService {
 //                .eq(Record::getRoomId, room.getId())
 //                .eq(Record::getBookTime, date);
         //Todo:Time
-        Record selectedRecord=recordMapper.selectOne(
+        Record selectedRecord = recordMapper.selectOne(
                 new MPJLambdaWrapper<Record>().selectAll(Record.class)
                         .eq(Record::getRoomId, roomId)
-                        .and(x->x.lt(Record::getBookStartTime,end).ge(Record::getBookEndTime,end)
-                                .or(e->e.le(Record::getBookStartTime,start).gt(Record::getBookEndTime,start)).or(e->e.gt(Record::getBookStartTime,start).lt(Record::getBookEndTime,end))));
+                        .and(x -> x.lt(Record::getBookStartTime, end).ge(Record::getBookEndTime, end)
+                                .or(e -> e.le(Record::getBookStartTime, start).gt(Record::getBookEndTime, start)).or(e -> e.gt(Record::getBookStartTime, start).lt(Record::getBookEndTime, end))));
 
 //        Record selectedRecord = recordMapper.selectOne(recordWrapper);
         if (!Objects.isNull(selectedRecord)) {
             return new ResponseResult(200, "ok", "时间冲突");
         }
-        Record record=new Record();
+        Record record = new Record();
         record.setGuestId(guestId);
         record.setRoomId(roomId);
         record.setBookStartTime(start);
-        record .setBookEndTime(end);
+        record.setBookEndTime(end);
         recordMapper.insert(record);
-        return new ResponseResult(200, "ok");
+        Integer roomTypeId = room1.getRoomTypeId();
+        Type type = typeMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getId, roomTypeId));
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        long l = (end.getTime() - start.getTime()) / 1000 / 3600 / 24 + 1;
+        if (guest.getBalance() < type.getPrice() * l) {
+            return new ResponseResult(200, "ok", "余额不足");
+        }
+
+        double nowBalance = guest.getBalance() - type.getPrice() * l;
+        double nowIntegral = guest.getIntegral() + type.getPrice() * l;
+        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId, guestId).set(Guest::getBalance, nowBalance).set(Guest::getIntegral, nowIntegral));
+        return new ResponseResult(200, "成功预定");
     }
 
     @Override
     public ResponseResult hotelsOfCity(String location, String name) {
         //Todo:Test
-        String province=location.split(",")[0];
-        String city=location.split(",")[1];
+        String province = location.split(",")[0];
+        String city = location.split(",")[1];
 
-        List<Hotel> allHotelsOfCity =hotelMapper.selectJoinList(Hotel.class, new MPJLambdaWrapper<Hotel>().selectAll(Hotel.class)
-                .leftJoin(Location.class,Location::getId,Hotel::getLocationId).eq(Location::getCity, city).eq(Location::getProvince,province).like(Hotel::getName,name));
-        if (allHotelsOfCity==null){
-            return new ResponseResult(200,"该地区酒店不存在");
+        List<Hotel> allHotelsOfCity = hotelMapper.selectJoinList(Hotel.class, new MPJLambdaWrapper<Hotel>().selectAll(Hotel.class)
+                .leftJoin(Location.class, Location::getId, Hotel::getLocationId).eq(Location::getCity, city).eq(Location::getProvince, province).like(Hotel::getName, name));
+        if (allHotelsOfCity == null) {
+            return new ResponseResult(200, "该地区酒店不存在");
         }
-        List<String> ID=new LinkedList<>();
+        List<String> ID = new LinkedList<>();
         for (int i = 0; i < allHotelsOfCity.size(); i++) {
             ID.add(String.valueOf(allHotelsOfCity.get(i).getId()));
         }
-        return new ResponseResult(200,"OK",ID);
+        return new ResponseResult(200, "OK", ID);
     }
 
-    public ResponseResult cancelOrder(Record record){
-            recordMapper.deleteById(record);
-        return new ResponseResult(200,"ok","删除成功");
+    public ResponseResult cancelOrder(Record record) {
+        recordMapper.deleteById(record);
+        return new ResponseResult(200, "ok", "删除成功");
     }
-    public ResponseResult modifyOrder(Record record){
 
-        return new ResponseResult(200,"ok","需要续交"+"元");
+    public ResponseResult modifyOrder(Record record) {
+
+        return new ResponseResult(200, "ok", "需要续交" + "元");
     }
 
     @Override

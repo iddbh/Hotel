@@ -28,13 +28,13 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
     @Autowired GuestService guestService;
-    @PostMapping("/book")
-    public ResponseResult Book(@RequestParam("room") Integer roomId, @RequestParam("startTime") String start,@RequestParam("endTime") String end) throws ParseException {
-        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
-        Date startTime = fmt.parse(start);
-        Date endTime = fmt.parse(end);
-        return hotelService.book(roomId,startTime,endTime);
-    }
+//    @PostMapping("/book")
+//    public ResponseResult Book(@RequestParam("room") Integer roomId, @RequestParam("startTime") String start,@RequestParam("endTime") String end) throws ParseException {
+//        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
+//        Date startTime = fmt.parse(start);
+//        Date endTime = fmt.parse(end);
+//        return hotelService.book(roomId,startTime,endTime);
+//    }
     @PostMapping("/selectHotel")
     public ResponseResult hotelsOfCity(@RequestParam("local") String location,@RequestParam("name") String name){
         return hotelService.hotelsOfCity(location,name);
