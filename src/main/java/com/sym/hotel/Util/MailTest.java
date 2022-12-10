@@ -20,7 +20,7 @@ public class MailTest
         {
             props.load(in);
         }
-
+        System.out.println(props.getProperty("mail.smtp.socketFactory.class"));
         // read message info
         List<String> lines = Files.readAllLines(Paths.get("src/main/resources/static/message.txt"), StandardCharsets.UTF_8);
 

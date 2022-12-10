@@ -7,6 +7,10 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-#  mapper-locations: classpath*:/dao/**/*.xml
-
+#  mapper-locations: classpath:mapConfig/*.xml
+server:
+  port: 8080
 #debug: true
+#mybatis:
+#  config-location: classpath:mybatis/mybatis-config.xml
+#  mapper-locations: classpath:mapConfig/*.xml
