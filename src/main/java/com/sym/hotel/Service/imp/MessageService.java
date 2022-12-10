@@ -1,7 +1,9 @@
 package com.sym.hotel.Service.imp;
 
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.sym.hotel.mapper.GuestMapper;
 import com.sym.hotel.mapper.MessageMapper;
+import com.sym.hotel.pojo.Guest;
 import com.sym.hotel.pojo.Message;
 import com.sym.hotel.pojo.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import java.util.List;
 public class MessageService {
     @Autowired
     MessageMapper messageMapper;
+    @Autowired
+    GuestMapper guestMapper;
 
 //    @Scheduled(cron = "*/15 * * * * *")
     public List<Message> getMessage(int sendId) {
@@ -30,6 +34,17 @@ public class MessageService {
         message.setMessage(content);
         message.setTime(time);
         messageMapper.insert(message);
+    }
+    public void addMessage(String content, Date time){
+        List<Guest> allGuest=guestMapper.selectList(new MPJLambdaWrapper<Guest>()
+                .selectAll(Guest.class).eq(Guest::getRoot,0));
+        for (int i = 0; i < allGuest.size(); i++) {
+            Message message=new Message();
+            message.setSendId(allGuest.get(i).getId());
+            message.setMessage(content);
+            message.setTime(time);
+            messageMapper.insert(message);
+        }
     }
 
 }

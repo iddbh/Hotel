@@ -5,6 +5,7 @@ import com.sym.hotel.Service.imp.GuestService;
 import com.sym.hotel.Service.imp.MessageService;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.domain.ResponseResult;
+import com.sym.hotel.pojo.Guest;
 import com.sym.hotel.pojo.Message;
 import com.sym.hotel.pojo.Record;
 import com.sym.hotel.Service.imp.returnClass.ReturnRecord;
@@ -66,14 +67,19 @@ public class GuestController {
         Integer sendId = loginGuest.getGuest().getId();
         return messageService.getMessage(sendId);
     }
-    @PostMapping("/message/send")
-    public void messageInsert( @RequestParam("message") String message, @RequestParam("time") String time) throws ParseException {
-//        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-//        LoginGuest loginGuest  = (LoginGuest) authentication.getPrincipal();
-//        Integer sendId = loginGuest.getGuest().getId();
-        int sendId=17;
+    @PostMapping("/message/gusetSend")
+    public void messageInsert1( @RequestParam("message") String message, @RequestParam("time") String time) throws ParseException {
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest  = (LoginGuest) authentication.getPrincipal();
+        Integer sendId = loginGuest.getGuest().getId();
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date Time = fmt.parse(time);
         messageService.addMessage(sendId,message,Time);
+    }
+    @PostMapping("/message/manageSend")
+    public void messageInsert2( @RequestParam("message") String message, @RequestParam("time") String time) throws ParseException {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date Time = fmt.parse(time);
+        messageService.addMessage(message,Time);
     }
 }
