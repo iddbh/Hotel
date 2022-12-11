@@ -75,7 +75,10 @@ public class GuestService implements UserDetailsService {
 
     public List<ReturnRecord> viewRecord(){
         // 这里没有使用连表查询，可以改进。屎山！！！！！！！
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        UsernamePasswordAuthenticationToken authentication;
+        try {
+            authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        }catch (Exception e){return null;}
         LoginGuest loginGuest  = (LoginGuest) authentication.getPrincipal();
         Integer id = loginGuest.getGuest().getId();
         LambdaQueryWrapper<Record> recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>().eq(Record::getGuestId, id);
@@ -93,9 +96,9 @@ public class GuestService implements UserDetailsService {
             int hotelId = type.getHotelId();
             LambdaQueryWrapper<Hotel> hotelLambdaQueryWrapper = new LambdaQueryWrapper<Hotel>().eq(Hotel::getId, hotelId);
             Hotel hotel = hotelMapper.selectOne(hotelLambdaQueryWrapper);
-            String hotemName = hotel.getName();
+            String hotelName = hotel.getName();
             int recordId = re.getId().hashCode();
-            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotemName, re.getBookStartTime(), re.getBookEndTime(), recordId));
+            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelName, re.getBookStartTime(), re.getBookEndTime(), recordId));
         }
         return rrl;
     }
