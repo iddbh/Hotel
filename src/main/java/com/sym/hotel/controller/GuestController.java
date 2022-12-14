@@ -3,6 +3,7 @@ package com.sym.hotel.controller;
 import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Service.imp.GuestService;
 import com.sym.hotel.Service.imp.MessageService;
+import com.sym.hotel.Service.imp.addData;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.domain.ResponseResult;
 import com.sym.hotel.pojo.Guest;
@@ -38,6 +39,8 @@ public class GuestController {
     public List<ReturnRecord> viewRecord() {
         return guestService.viewRecord();
     }
+    @Autowired
+    public com.sym.hotel.Service.imp.addData adddata;
 
     @Autowired
     private HotelService hotelService;
@@ -46,12 +49,17 @@ public class GuestController {
 //    public ResponseResult ModifyOrder(@RequestBody Record record){
 //        return hotelService.modifyOrder(record);
 //    }
+    @GetMapping("/add")
+    public ResponseResult add(){
+        adddata.add();
+        return new ResponseResult(200,"ok","insert");
+    }
     @PostMapping("/book")
-    public ResponseResult Book(@RequestParam("room") Integer roomId, @RequestParam("startTime") String start, @RequestParam("endTime") String end) throws ParseException {
+    public ResponseResult Book(@RequestParam("room") Integer roomNum,@RequestParam("hotel") Integer hotelId, @RequestParam("startTime") String start, @RequestParam("endTime") String end) throws ParseException {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date startTime = fmt.parse(start);
         Date endTime = fmt.parse(end);
-        return hotelService.book(roomId, startTime, endTime);
+        return hotelService.book(roomNum,hotelId, startTime, endTime);
     }
 
     @PostMapping("/cancelorder")

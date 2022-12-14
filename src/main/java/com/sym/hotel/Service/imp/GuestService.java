@@ -50,10 +50,10 @@ public class GuestService implements UserDetailsService {
         return new LoginGuest(guest,list);
     }
 
-    public List<Integer> selectRoom(Double minMoney, Double maxMoney, Date startTime, Date endTime){
+    public List<Integer> selectRoom(Integer hotelId,Double minMoney, Double maxMoney, Date startTime, Date endTime){
         List<Room> list=roomMapper.selectJoinList(Room.class,
                 new MPJLambdaWrapper<Room>().selectAll(Room.class).leftJoin(Type.class,Type::getId,Room::getRoomTypeId).select(Type::getPrice)
-                        .gt(Type::getPrice,minMoney).le(Type::getPrice,maxMoney));
+                        .eq(Type::getHotelId,hotelId).gt(Type::getPrice,minMoney).le(Type::getPrice,maxMoney));
         List<Room> listDel=new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             listDel=roomMapper.selectJoinList(Room.class,new MPJLambdaWrapper<Room>().selectAll(Room.class).
@@ -66,11 +66,11 @@ public class GuestService implements UserDetailsService {
         h1.removeAll(h2);
         list.clear();
         list.addAll(h1);
-        List<Integer> listID=new ArrayList<>();
+        List<Integer> listNum=new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            listID.add(list.get(i).getId());
+            listNum.add(list.get(i).getRoomNum());
         }
-        return listID;
+        return listNum;
     }
 
     public List<ReturnRecord> viewRecord(){

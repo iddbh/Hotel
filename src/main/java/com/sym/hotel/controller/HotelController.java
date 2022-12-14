@@ -38,12 +38,12 @@ public class HotelController {
         return hotelService.hotelsOfCity(location,name);
     }
     @PostMapping("/selectRoom")
-    public List<Integer> hotelInMoneyRange(@RequestParam("minMoney") Double minMoney, @RequestParam("maxMoney") Double maxMoney,
+    public List<Integer> hotelInMoneyRange(@RequestParam("hotel") Integer hotelId,@RequestParam("minMoney") Double minMoney, @RequestParam("maxMoney") Double maxMoney,
                                         @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) throws ParseException {
         DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
         Date start = fmt.parse(startTime);
         Date end = fmt.parse(endTime);
-        return guestService.selectRoom(minMoney,maxMoney,start,end);
+        return guestService.selectRoom(hotelId,minMoney,maxMoney,start,end);
 
     }
     @PostMapping("hotelInfo")

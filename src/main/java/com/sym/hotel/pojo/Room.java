@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Room {
-    @TableId(type = IdType.AUTO)
+//    @TableId(type = IdType.AUTO)
     private Integer id;
-    private String location;
+    private Integer roomNum;
     private Integer roomTypeId;
 }

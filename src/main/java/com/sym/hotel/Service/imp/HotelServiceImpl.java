@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Util.RedisCache;
+import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.domain.ResponseResult;
 import com.sym.hotel.mapper.*;
 import com.sym.hotel.pojo.*;
 import com.sym.hotel.pojo.Record;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -39,28 +41,33 @@ public class HotelServiceImpl implements HotelService {
         return userInfo;
     }
     @Override
-    public ResponseResult book(Integer roomId, Date start, Date end) {
-        //Todo:Test
+    public ResponseResult book(Integer roomNum,Integer hotelId, Date start, Date end) {
 //        int guestId = (int) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        int guestId = 14;
-        LambdaQueryWrapper<Room> roomWrapper = new LambdaQueryWrapper<Room>()
-                .eq(Room::getId, roomId);
-        Room room1 = roomMapper.selectOne(roomWrapper);
-        if (Objects.isNull(room1)) {
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest  = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Room room=roomMapper.selectOne(
+                new MPJLambdaWrapper<Room>().selectAll(Room.class)
+                        .eq(Room::getRoomNum, roomNum).leftJoin(Type.class,Type::getId,Room::getRoomTypeId).eq(Type::getHotelId,hotelId));
+
+//        LambdaQueryWrapper<Room> roomWrapper = new LambdaQueryWrapper<Room>()
+//                .eq(Room::getId, roomId);
+//        Room room1 = roomMapper.selectOne(roomWrapper);
+        if (Objects.isNull(room)) {
             return new ResponseResult(200, "ok", "房间不存在");
         }
+        Integer roomId=room.getId();
 //        LambdaQueryWrapper<Record> recordWrapper = new LambdaQueryWrapper<Record>()
 //                .eq(Record::getRoomId, room.getId())
 //                .eq(Record::getBookTime, date);
-        //Todo:Time
-        Record selectedRecord = recordMapper.selectOne(
+        List<Record> selectedRecord = recordMapper.selectList(
                 new MPJLambdaWrapper<Record>().selectAll(Record.class)
                         .eq(Record::getRoomId, roomId)
                         .and(x -> x.lt(Record::getBookStartTime, end).ge(Record::getBookEndTime, end)
                                 .or(e -> e.le(Record::getBookStartTime, start).gt(Record::getBookEndTime, start)).or(e -> e.gt(Record::getBookStartTime, start).lt(Record::getBookEndTime, end))));
 
 //        Record selectedRecord = recordMapper.selectOne(recordWrapper);
-        if (!Objects.isNull(selectedRecord)) {
+        if (selectedRecord.size()!=0) {
             return new ResponseResult(200, "ok", "时间冲突");
         }
         Record record = new Record();
@@ -69,7 +76,7 @@ public class HotelServiceImpl implements HotelService {
         record.setBookStartTime(start);
         record.setBookEndTime(end);
         recordMapper.insert(record);
-        Integer roomTypeId = room1.getRoomTypeId();
+        Integer roomTypeId = room.getRoomTypeId();
         Type type = typeMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getId, roomTypeId));
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
         long l = (end.getTime() - start.getTime()) / 1000 / 3600 / 24 + 1;
@@ -80,7 +87,7 @@ public class HotelServiceImpl implements HotelService {
         double nowBalance = guest.getBalance() - type.getPrice() * l;
         double nowIntegral = guest.getIntegral() + type.getPrice() * l;
         guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId, guestId).set(Guest::getBalance, nowBalance).set(Guest::getIntegral, nowIntegral));
-        return new ResponseResult(200, "成功预定");
+        return new ResponseResult(200, "ok","成功预定");
     }
 
     @Override
