@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/guest")
 @CrossOrigin
 public class HotelController {
     @Autowired
