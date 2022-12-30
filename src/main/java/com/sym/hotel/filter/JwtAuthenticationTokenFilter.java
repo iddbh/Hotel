@@ -6,6 +6,7 @@ import com.sym.hotel.domain.LoginGuest;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+
+        if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         //获取token
         String token = request.getHeader("Token");
         if (!StringUtils.hasText(token)) {
