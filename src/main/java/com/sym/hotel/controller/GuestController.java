@@ -31,6 +31,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/guest")
+@CrossOrigin(origins = "*")
 public class GuestController {
     @Autowired
     private GuestService guestService;
