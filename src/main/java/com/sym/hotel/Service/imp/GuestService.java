@@ -98,7 +98,8 @@ public class GuestService implements UserDetailsService {
             Hotel hotel = hotelMapper.selectOne(hotelLambdaQueryWrapper);
             String hotelName = hotel.getName();
             int recordId = re.getId().hashCode();
-            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelName, re.getBookStartTime(), re.getBookEndTime(), recordId));
+            boolean isOver = (new Date().getTime() < re.getBookEndTime().getTime());
+            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelName, re.getBookStartTime(), re.getBookEndTime(), recordId, isOver));
         }
         return rrl;
     }

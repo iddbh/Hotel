@@ -20,4 +20,5 @@ public class ReturnRecord {
     private Date bookStartTime;
     private Date bookEndTime;
     private int recordId;
+    private boolean isOver;
 }
