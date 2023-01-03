@@ -31,9 +31,12 @@ public class ManagerController {
     @PostMapping("SelectRecordInfo")
     public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
                                          @RequestParam(value = "guestId", defaultValue = "-1") int guestId,
-                                         @RequestParam(value = "startTime", defaultValue = "1999-01-01") Date startTime,
-                                         @RequestParam(value = "endTime", defaultValue = "2100-12-31") Date endTime,
-                                         @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) {
+                                         @RequestParam(value = "startTime", defaultValue = "1999-01-01") String start,
+                                         @RequestParam(value = "endTime", defaultValue = "2100-12-31") String end,
+                                         @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) throws ParseException {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date startTime = fmt.parse(start);
+        Date endTime = fmt.parse(end);
         if(roomNum != -1)
             return managerService.selectRecordInfo(guestId, startTime, endTime);
         return managerService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);

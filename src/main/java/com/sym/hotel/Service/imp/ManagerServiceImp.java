@@ -62,7 +62,7 @@ public class ManagerServiceImp {
 
     // 直接默认能走到这就是超级大管理员了，啥都返回吧，摆了
     public List<Record> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
-        //Todo: test
+        //Todo: 前后端对接
         List<Record> recordList;
         if(guestId == -1) {
             recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
