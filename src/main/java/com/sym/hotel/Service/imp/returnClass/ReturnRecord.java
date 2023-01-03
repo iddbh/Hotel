@@ -21,4 +21,5 @@ public class ReturnRecord {
     private Date bookEndTime;
     private int recordId;
     private boolean isOver;
+    private int roomName;
 }

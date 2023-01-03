@@ -103,7 +103,7 @@ public class GuestService implements UserDetailsService {
             String hotelName = hotel.getName();
             int recordId = re.getId();
             boolean isOver = (new Date().getTime() < re.getBookEndTime().getTime());
-            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelName, re.getBookStartTime(), re.getBookEndTime(), recordId, isOver));
+            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelName, re.getBookStartTime(), re.getBookEndTime(), recordId, isOver, room.getRoomNum()));
         }
         return rrl;
     }
