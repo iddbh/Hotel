@@ -4,6 +4,7 @@ import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Service.imp.GuestService;
 import com.sym.hotel.Service.imp.MessageService;
 import com.sym.hotel.Service.imp.addData;
+import com.sym.hotel.Service.imp.returnClass.SerAndPri;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.domain.ResponseResult;
 import com.sym.hotel.pojo.Guest;
@@ -39,6 +40,14 @@ public class GuestController {
     @RequestMapping("/record")
     public List<ReturnRecord> viewRecord() {
         return guestService.viewRecord();
+    }
+    @RequestMapping("/chooseRoom")
+    public SerAndPri chooseRoom(@RequestParam("room") Integer roomNum, @RequestParam("hotel") Integer hotelId){
+        return guestService.serAndPri(roomNum, hotelId);
+    }
+    @RequestMapping("/modify")
+    public ResponseResult modifyRecord(@RequestParam("record") Integer recordId, @RequestParam("room") Integer roomId){
+        return guestService.modifyRecord(recordId, roomId);
     }
     @Autowired
     public com.sym.hotel.Service.imp.addData adddata;

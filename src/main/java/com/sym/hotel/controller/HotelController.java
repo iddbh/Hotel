@@ -48,7 +48,6 @@ public class HotelController {
     }
     @PostMapping("hotelInfo")
     public List<Type> hotelInfo(@RequestBody Hotel hotel){
-
         return hotelService.hotelInfo(hotel);
     }
 
