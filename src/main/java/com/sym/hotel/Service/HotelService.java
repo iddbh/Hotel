@@ -19,4 +19,5 @@ public interface HotelService {
     ResponseResult modifyOrder(Record record);
     ResponseResult topUp(double money);
     ResponseResult pointShopping(int id);
+    ResponseResult collect(int hotelId);
 }

@@ -99,4 +99,8 @@ public class GuestController {
     public ResponseResult topUp(@RequestParam("money")double money){
         return hotelService.topUp(money);
     }
+    @PostMapping("collect")
+    public ResponseResult collect(@RequestParam("hotelId")int hotelId){
+        return  hotelService.collect(hotelId);
+    }
 }

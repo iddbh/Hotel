@@ -32,6 +32,8 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     PointshopMapper pointshopMapper;
     @Autowired
+    CollectTableMapper collectTableMapper;
+    @Autowired
     RedisCache redisCache;
 
     public Map selectUserInfo(Integer userId) {
@@ -152,4 +154,29 @@ public class HotelServiceImpl implements HotelService {
         guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getBalance,guest.getBalance()+money));
         return new ResponseResult(200,"ok","充值成功，余额为"+(guest.getBalance()+money));
     }
+    public ResponseResult collect(int id){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        CollectTable collectTable = collectTableMapper.selectOne(new LambdaQueryWrapper<CollectTable>().eq(CollectTable::getGuestId, guestId).eq(CollectTable::getHotelId, id));
+        if(Objects.isNull(collectTable)){
+            CollectTable collectTable1 = new CollectTable();
+            collectTable1.setHotelId(id);
+            collectTable1.setGuestId(guestId);
+            collectTable1.setStatus(1);
+            collectTableMapper.insert(collectTable1);
+            return new ResponseResult(200,"ok","已收藏");
+        }else{
+            Integer status = collectTable.getStatus();
+            if(status==1){
+                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<CollectTable>().eq(CollectTable::getGuestId,guestId).eq(CollectTable::getHotelId,id).set(CollectTable::getStatus,0));
+                return new ResponseResult(200,"ok","已取消收藏");
+            }else{
+                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<CollectTable>().eq(CollectTable::getGuestId,guestId).eq(CollectTable::getHotelId,id).set(CollectTable::getStatus,1));
+                return new ResponseResult(200,"ok","已收藏");
+            }
+        }
+    }
 }
+
