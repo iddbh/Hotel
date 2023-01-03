@@ -103,4 +103,12 @@ public class GuestController {
     public ResponseResult collect(@RequestParam("hotelId")int hotelId){
         return  hotelService.collect(hotelId);
     }
+    @PostMapping("showStars")
+    public List<Integer> showStars(){
+        return hotelService.showStars();
+    }
+    @PostMapping("lookUpMoney")
+    public double lookUpMoney(){
+        return hotelService.lookUpMoney();
+    }
 }

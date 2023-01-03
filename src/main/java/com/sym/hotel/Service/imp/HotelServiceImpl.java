@@ -154,6 +154,13 @@ public class HotelServiceImpl implements HotelService {
         guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getBalance,guest.getBalance()+money));
         return new ResponseResult(200,"ok","充值成功，余额为"+(guest.getBalance()+money));
     }
+    public double lookUpMoney(){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        return guest.getBalance();
+    }
     public ResponseResult collect(int id){
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
@@ -177,6 +184,18 @@ public class HotelServiceImpl implements HotelService {
                 return new ResponseResult(200,"ok","已收藏");
             }
         }
+    }
+    public List<Integer> showStars(){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        List<CollectTable> collectTables = collectTableMapper.selectList(new LambdaQueryWrapper<CollectTable>().eq(CollectTable::getGuestId, guestId).eq(CollectTable::getStatus, 1));
+        List<Integer> idList=new ArrayList<>();
+        for(CollectTable c:collectTables){
+            idList.add(c.getHotelId());
+        }
+        return idList;
     }
 }
 

@@ -20,4 +20,6 @@ public interface HotelService {
     ResponseResult topUp(double money);
     ResponseResult pointShopping(int id);
     ResponseResult collect(int hotelId);
+    double lookUpMoney();
+    List<Integer> showStars();
 }
