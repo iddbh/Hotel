@@ -25,7 +25,13 @@ public class ManagerController {
     }
 
     @PostMapping("SelectRecordInfo")
-    public List<Record> selectRecordInfo(@RequestParam("guestId") int guestId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime) {
-        return managerService.selectRecordInfo(guestId, startTime, endTime);
+    public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
+                                         @RequestParam(value = "guestId", defaultValue = "-1") int guestId,
+                                         @RequestParam(value = "startTime", defaultValue = "1999-01-01") Date startTime,
+                                         @RequestParam(value = "endTime", defaultValue = "2100-12-31") Date endTime,
+                                         @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) {
+        if(roomNum != -1)
+            return managerService.selectRecordInfo(guestId, startTime, endTime);
+        return managerService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
     }
 }
