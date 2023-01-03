@@ -14,4 +14,11 @@ public class Evaluation {
     private Integer id;
     private Integer recordId;
     private String statement;
+    private String picture;
+    private String video;
+    private Integer score;
+    private Integer hotelId;
+    private Integer guestId;
+
+
 }

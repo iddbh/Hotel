@@ -9,6 +9,7 @@ import com.sym.hotel.pojo.Type;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface HotelService {
     ResponseResult book(Integer roomNum,Integer hotelId, Date date1,Date date2);
@@ -22,4 +23,6 @@ public interface HotelService {
     ResponseResult collect(int hotelId);
     double lookUpMoney();
     List<Integer> showStars();
+    String evaluate(String statement, String picture, String score, String video, int recordId);
+    public List<Map<String, String>> showEvaluation(int hotelId);
 }
