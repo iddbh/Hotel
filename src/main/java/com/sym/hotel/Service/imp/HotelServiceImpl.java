@@ -152,7 +152,7 @@ public class HotelServiceImpl implements HotelService {
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
         guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getBalance,guest.getBalance()+money));
-        return new ResponseResult(200,"ok","充值成功，余额为"+(guest.getBalance()+money));
+        return new ResponseResult(200,"充值成功",(guest.getBalance()+money));
     }
     public double lookUpMoney(){
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
