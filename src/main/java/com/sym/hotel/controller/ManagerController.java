@@ -2,6 +2,7 @@ package com.sym.hotel.controller;
 
 import com.sym.hotel.Service.ManagerService;
 import com.sym.hotel.Service.imp.ManagerServiceImp;
+import com.sym.hotel.Service.imp.returnClass.Analyse;
 import com.sym.hotel.pojo.Record;
 import com.sym.hotel.domain.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,10 @@ public class ManagerController {
         if(roomNum != -1)
             return managerService.selectRecordInfo(guestId, startTime, endTime);
         return managerService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
+    }
+
+    @PostMapping("MoneyAnalyse")
+    public List<Analyse> moneyGet(@RequestParam("hotelId") Integer hotelId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime){
+        return managerService.moneyGet(hotelId, startTime, endTime);
     }
 }
