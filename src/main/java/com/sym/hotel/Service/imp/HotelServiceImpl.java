@@ -166,9 +166,9 @@ public class HotelServiceImpl implements HotelService {
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
-        CollectTable collectTable = collectTableMapper.selectOne(new LambdaQueryWrapper<CollectTable>().eq(CollectTable::getGuestId, guestId).eq(CollectTable::getHotelId, id));
+        Collecttable collectTable = collectTableMapper.selectOne(new LambdaQueryWrapper<Collecttable>().eq(Collecttable::getGuestId, guestId).eq(Collecttable::getHotelId, id));
         if(Objects.isNull(collectTable)){
-            CollectTable collectTable1 = new CollectTable();
+            Collecttable collectTable1 = new Collecttable();
             collectTable1.setHotelId(id);
             collectTable1.setGuestId(guestId);
             collectTable1.setStatus(1);
@@ -177,10 +177,10 @@ public class HotelServiceImpl implements HotelService {
         }else{
             Integer status = collectTable.getStatus();
             if(status==1){
-                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<CollectTable>().eq(CollectTable::getGuestId,guestId).eq(CollectTable::getHotelId,id).set(CollectTable::getStatus,0));
+                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<Collecttable>().eq(Collecttable::getGuestId,guestId).eq(Collecttable::getHotelId,id).set(Collecttable::getStatus,0));
                 return new ResponseResult(200,"ok","已取消收藏");
             }else{
-                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<CollectTable>().eq(CollectTable::getGuestId,guestId).eq(CollectTable::getHotelId,id).set(CollectTable::getStatus,1));
+                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<Collecttable>().eq(Collecttable::getGuestId,guestId).eq(Collecttable::getHotelId,id).set(Collecttable::getStatus,1));
                 return new ResponseResult(200,"ok","已收藏");
             }
         }
@@ -190,9 +190,10 @@ public class HotelServiceImpl implements HotelService {
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
-        List<CollectTable> collectTables = collectTableMapper.selectList(new LambdaQueryWrapper<CollectTable>().eq(CollectTable::getGuestId, guestId).eq(CollectTable::getStatus, 1));
+        List<Collecttable> collectTables = collectTableMapper.selectList(new LambdaQueryWrapper<Collecttable>().eq(Collecttable::getGuestId, guestId).eq(Collecttable::getStatus, 1));
+//        .eq(Collecttable::getGuestId, guestId).eq(Collecttable::getStatus, 1)
         List<Integer> idList=new ArrayList<>();
-        for(CollectTable c:collectTables){
+        for(Collecttable c:collectTables){
             idList.add(c.getHotelId());
         }
         return idList;
