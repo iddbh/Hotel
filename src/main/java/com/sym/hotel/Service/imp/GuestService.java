@@ -114,10 +114,10 @@ public class GuestService implements UserDetailsService {
         return new SerAndPri(type.getService(), type.getPrice());
     }
 
-    public ResponseResult modifyRecord(int recordId, int roomId) {
-        LambdaQueryWrapper<Record> recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>().eq(Record::getId, recordId);
-        Record record = recordMapper.selectOne(recordLambdaQueryWrapper);
-        recordMapper.update(record, new LambdaUpdateWrapper<Record>().eq(Record::getId, recordId).set(Record::getRoomId, roomId));
+    // 管理员修改酒店信息
+    public ResponseResult modifyRoom(int roomNum, int hotelId, double price, String service) {
+        Type type = typeMapper.selectJoinOne(Type.class, new MPJLambdaWrapper<Type>().selectAll(Type.class).leftJoin(Room.class, Room::getRoomTypeId, Type::getId).eq(Room::getRoomNum, roomNum).eq(Type::getHotelId, hotelId));
+        typeMapper.update(type, new LambdaUpdateWrapper<Type>().eq(Type::getId, type.getId()).set(Type::getPrice, price).set(Type::getService, service));
         return new ResponseResult(200, "修改成功");
     }
 

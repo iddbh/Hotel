@@ -15,6 +15,6 @@ public interface HotelService {
     ResponseResult hotelsOfCity(String location,String name);
 
     List<Type> hotelInfo(Hotel hotel);
-    ResponseResult cancelOrder(Record records);
+    ResponseResult cancelOrder(int recordId);
     ResponseResult modifyOrder(Record record);
 }
