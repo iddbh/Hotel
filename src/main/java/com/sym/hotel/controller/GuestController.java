@@ -91,4 +91,12 @@ public class GuestController {
         Date Time = fmt.parse(time);
         messageService.addMessage(message,Time);
     }
+    @PostMapping("/pointShopping")
+    public ResponseResult pointShopping(@RequestParam("id")int id){
+        return hotelService.pointShopping(id);
+    }
+    @PostMapping("topUp")
+    public ResponseResult topUp(@RequestParam("money")double money){
+        return hotelService.topUp(money);
+    }
 }

@@ -17,4 +17,6 @@ public interface HotelService {
     List<Type> hotelInfo(Hotel hotel);
     ResponseResult cancelOrder(Record records);
     ResponseResult modifyOrder(Record record);
+    ResponseResult topUp(double money);
+    ResponseResult pointShopping(int id);
 }

@@ -30,25 +30,29 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     GuestMapper guestMapper;
     @Autowired
+    PointshopMapper pointshopMapper;
+    @Autowired
     RedisCache redisCache;
-    public Map selectUserInfo(Integer userId){
+
+    public Map selectUserInfo(Integer userId) {
         //Token:userId
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, userId));
-        Map<String, Number> userInfo =new HashMap<>();
-        userInfo.put("userId",userId);
-        userInfo.put("balance",guest.getBalance());
-        userInfo.put("Integral",guest.getIntegral());
+        Map<String, Number> userInfo = new HashMap<>();
+        userInfo.put("userId", userId);
+        userInfo.put("balance", guest.getBalance());
+        userInfo.put("Integral", guest.getIntegral());
         return userInfo;
     }
+
     @Override
-    public ResponseResult book(Integer roomNum,Integer hotelId, Date start, Date end) {
+    public ResponseResult book(Integer roomNum, Integer hotelId, Date start, Date end) {
 //        int guestId = (int) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        LoginGuest loginGuest  = (LoginGuest) authentication.getPrincipal();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
-        Room room=roomMapper.selectOne(
+        Room room = roomMapper.selectOne(
                 new MPJLambdaWrapper<Room>().selectAll(Room.class)
-                        .eq(Room::getRoomNum, roomNum).leftJoin(Type.class,Type::getId,Room::getRoomTypeId).eq(Type::getHotelId,hotelId));
+                        .eq(Room::getRoomNum, roomNum).leftJoin(Type.class, Type::getId, Room::getRoomTypeId).eq(Type::getHotelId, hotelId));
 
 //        LambdaQueryWrapper<Room> roomWrapper = new LambdaQueryWrapper<Room>()
 //                .eq(Room::getId, roomId);
@@ -56,7 +60,7 @@ public class HotelServiceImpl implements HotelService {
         if (Objects.isNull(room)) {
             return new ResponseResult(200, "ok", "房间不存在");
         }
-        Integer roomId=room.getId();
+        Integer roomId = room.getId();
 //        LambdaQueryWrapper<Record> recordWrapper = new LambdaQueryWrapper<Record>()
 //                .eq(Record::getRoomId, room.getId())
 //                .eq(Record::getBookTime, date);
@@ -67,7 +71,7 @@ public class HotelServiceImpl implements HotelService {
                                 .or(e -> e.le(Record::getBookStartTime, start).gt(Record::getBookEndTime, start)).or(e -> e.gt(Record::getBookStartTime, start).lt(Record::getBookEndTime, end))));
 
 //        Record selectedRecord = recordMapper.selectOne(recordWrapper);
-        if (selectedRecord.size()!=0) {
+        if (selectedRecord.size() != 0) {
             return new ResponseResult(200, "ok", "时间冲突");
         }
         Record record = new Record();
@@ -87,7 +91,7 @@ public class HotelServiceImpl implements HotelService {
         double nowBalance = guest.getBalance() - type.getPrice() * l;
         double nowIntegral = guest.getIntegral() + type.getPrice() * l;
         guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId, guestId).set(Guest::getBalance, nowBalance).set(Guest::getIntegral, nowIntegral));
-        return new ResponseResult(200, "ok","成功预定");
+        return new ResponseResult(200, "ok", "成功预定");
     }
 
     @Override
@@ -124,5 +128,28 @@ public class HotelServiceImpl implements HotelService {
         LambdaQueryWrapper<Type> typeLambdaQueryWrapper = new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId);
         List<Type> allTypeOfHotel = typeMapper.selectList(typeLambdaQueryWrapper);
         return allTypeOfHotel;
+    }
+
+    public ResponseResult pointShopping(int id) {
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        Double integral = guest.getIntegral();
+        Pointshop goods = pointshopMapper.selectOne(new LambdaQueryWrapper<Pointshop>().eq(Pointshop::getId, id));
+        if (goods.getIntegral() > integral) {
+            return new ResponseResult(200,"ok","积分余额不足");
+        }
+        double left=integral-goods.getIntegral();
+        guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().set(Guest::getIntegral,left));
+        return new ResponseResult(200,"ok","成功购买");
+    }
+    public ResponseResult topUp(double money){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getBalance,guest.getBalance()+money));
+        return new ResponseResult(200,"ok","充值成功，余额为"+(guest.getBalance()+money));
     }
 }

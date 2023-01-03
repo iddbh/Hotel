@@ -13,11 +13,9 @@ public class addData {
     public void add(){
         int index=69;
         for (int i = 1; i <= 4; i++) {
-
             Room room=new Room();
 
             room.setRoomTypeId(i);
-
             for (int j = 1; j <= 3; j++) {
 
                 room.setId(index);

@@ -25,7 +25,9 @@ import java.util.Map;
 public class HotelController {
     @Autowired
     private HotelService hotelService;
-    @Autowired GuestService guestService;
+    @Autowired
+    private GuestService guestService;
+
 //    @PostMapping("/book")
 //    public ResponseResult Book(@RequestParam("room") Integer roomId, @RequestParam("startTime") String start,@RequestParam("endTime") String end) throws ParseException {
 //        DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd");
