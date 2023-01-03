@@ -81,7 +81,6 @@ public class ManagerServiceImp {
 
     // 营业额分析，摆了
     public List<Analyse> moneyGet(int hotelId, Date startTime, Date endTime){
-        //Todo:test
         List<Analyse> returnList = new ArrayList<>();
         List<Type> roomTypes = typeMapper.selectList(new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId));
         Calendar calendar = new GregorianCalendar();
@@ -98,7 +97,8 @@ public class ManagerServiceImp {
                         .le(Record::getBookStartTime, d)
                         .ge(Record::getBookEndTime, d));
                 money = t.getPrice() * recordList.size();
-                returnList.add(new Analyse(startTime, typeName, money));
+                if(money != 0.0)
+                    returnList.add(new Analyse(d, typeName, money));
             }
             calendar.add(Calendar.DATE, 1);
             d = calendar.getTime();

@@ -9,19 +9,21 @@ import com.sym.hotel.pojo.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
+//@Component
 public class MessageService {
     @Autowired
     MessageMapper messageMapper;
     @Autowired
     GuestMapper guestMapper;
 
-//    @Scheduled(cron = "*/15 * * * * *")
+    //@Scheduled(cron = "*/15 * * * * *")
     public List<Message> getMessage(int sendId) {
         List<Message> messages = messageMapper.selectList(new MPJLambdaWrapper<Message>()
                 .selectAll(Message.class).eq(Message::getSendId,sendId)

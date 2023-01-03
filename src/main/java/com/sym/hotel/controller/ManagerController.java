@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -36,8 +39,11 @@ public class ManagerController {
         return managerService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
     }
 
-    @PostMapping("MoneyAnalyse")
-    public List<Analyse> moneyGet(@RequestParam("hotelId") Integer hotelId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime){
+    @PostMapping("/moneyAnalyse")
+    public List<Analyse> moneyGet(@RequestParam("hotelId") Integer hotelId, @RequestParam("startTime") String start, @RequestParam("endTime") String end) throws ParseException {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date startTime = fmt.parse(start);
+        Date endTime = fmt.parse(end);
         return managerService.moneyGet(hotelId, startTime, endTime);
     }
 }
