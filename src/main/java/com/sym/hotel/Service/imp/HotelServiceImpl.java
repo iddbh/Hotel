@@ -34,6 +34,8 @@ public class HotelServiceImpl implements HotelService {
     @Autowired
     CollectTableMapper collectTableMapper;
     @Autowired
+    EvaluationMapper evaluationMapper;
+    @Autowired
     RedisCache redisCache;
 
     public Map selectUserInfo(Integer userId) {
@@ -140,63 +142,103 @@ public class HotelServiceImpl implements HotelService {
         Double integral = guest.getIntegral();
         Pointshop goods = pointshopMapper.selectOne(new LambdaQueryWrapper<Pointshop>().eq(Pointshop::getId, id));
         if (goods.getIntegral() > integral) {
-            return new ResponseResult(200,"ok","积分余额不足");
+            return new ResponseResult(200, "ok", "积分余额不足");
         }
-        double left=integral-goods.getIntegral();
-        guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().set(Guest::getIntegral,left));
-        return new ResponseResult(200,"ok","成功购买");
+        double left = integral - goods.getIntegral();
+        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().set(Guest::getIntegral, left));
+        return new ResponseResult(200, "ok", "成功购买");
     }
-    public ResponseResult topUp(double money){
+
+    public ResponseResult topUp(double money) {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
-        guestMapper.update(guest,new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getBalance,guest.getBalance()+money));
-        return new ResponseResult(200,"充值成功",(guest.getBalance()+money));
+        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId, guestId).set(Guest::getBalance, guest.getBalance() + money));
+        return new ResponseResult(200, "充值成功", (guest.getBalance() + money));
     }
-    public double lookUpMoney(){
+
+    public double lookUpMoney() {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
         return guest.getBalance();
     }
-    public ResponseResult collect(int id){
+
+    public ResponseResult collect(int id) {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
         Collecttable collectTable = collectTableMapper.selectOne(new LambdaQueryWrapper<Collecttable>().eq(Collecttable::getGuestId, guestId).eq(Collecttable::getHotelId, id));
-        if(Objects.isNull(collectTable)){
+        if (Objects.isNull(collectTable)) {
             Collecttable collectTable1 = new Collecttable();
             collectTable1.setHotelId(id);
             collectTable1.setGuestId(guestId);
             collectTable1.setStatus(1);
             collectTableMapper.insert(collectTable1);
-            return new ResponseResult(200,"ok","已收藏");
-        }else{
+            return new ResponseResult(200, "ok", "已收藏");
+        } else {
             Integer status = collectTable.getStatus();
-            if(status==1){
-                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<Collecttable>().eq(Collecttable::getGuestId,guestId).eq(Collecttable::getHotelId,id).set(Collecttable::getStatus,0));
-                return new ResponseResult(200,"ok","已取消收藏");
-            }else{
-                collectTableMapper.update(collectTable,new LambdaUpdateWrapper<Collecttable>().eq(Collecttable::getGuestId,guestId).eq(Collecttable::getHotelId,id).set(Collecttable::getStatus,1));
-                return new ResponseResult(200,"ok","已收藏");
+            if (status == 1) {
+                collectTableMapper.update(collectTable, new LambdaUpdateWrapper<Collecttable>().eq(Collecttable::getGuestId, guestId).eq(Collecttable::getHotelId, id).set(Collecttable::getStatus, 0));
+                return new ResponseResult(200, "ok", "已取消收藏");
+            } else {
+                collectTableMapper.update(collectTable, new LambdaUpdateWrapper<Collecttable>().eq(Collecttable::getGuestId, guestId).eq(Collecttable::getHotelId, id).set(Collecttable::getStatus, 1));
+                return new ResponseResult(200, "ok", "已收藏");
             }
         }
     }
-    public List<Integer> showStars(){
+
+    public List<Integer> showStars() {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
         Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
         List<Collecttable> collectTables = collectTableMapper.selectList(new LambdaQueryWrapper<Collecttable>().eq(Collecttable::getGuestId, guestId).eq(Collecttable::getStatus, 1));
-//        .eq(Collecttable::getGuestId, guestId).eq(Collecttable::getStatus, 1)
-        List<Integer> idList=new ArrayList<>();
-        for(Collecttable c:collectTables){
+        List<Integer> idList = new ArrayList<>();
+        for (Collecttable c : collectTables) {
             idList.add(c.getHotelId());
         }
         return idList;
+    }
+
+    public String evaluate(String statement, String picture, String score, String video, int recordId) {
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Record record = recordMapper.selectOne(new LambdaQueryWrapper<Record>().eq(Record::getId, recordId));
+        Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getId, record.getRoomId()));
+        Type type = typeMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getId, room.getRoomTypeId()));
+        int hotelId = type.getHotelId();
+        Evaluation evaluation = new Evaluation();
+        evaluation.setHotelId(hotelId);
+        evaluation.setGuestId(guestId);
+        evaluation.setPicture(picture);
+        evaluation.setVideo(video);
+        evaluation.setScore(Integer.parseInt(score));
+        evaluation.setRecordId(recordId);
+        evaluation.setStatement(statement);
+        evaluationMapper.insert(evaluation);
+        return "评价成功";
+    }
+
+    public List<Map<String, String>> showEvaluation(int hotelId) {
+        ArrayList<Map<String, String>> maps = new ArrayList<>();
+        List<Evaluation> evaluations = evaluationMapper.selectList(new LambdaQueryWrapper<Evaluation>().eq(Evaluation::getHotelId, hotelId));
+        for (Evaluation e : evaluations) {
+            Map<String, String> stringStringMap = new HashMap<>();
+            stringStringMap.put("hotelId", e.getHotelId().toString());
+            stringStringMap.put("statement", e.getStatement());
+            stringStringMap.put("picture", e.getPicture());
+            stringStringMap.put("score", e.getScore().toString());
+            stringStringMap.put("video", e.getVideo());
+            stringStringMap.put("guestId", e.getGuestId().toString());
+            stringStringMap.put("record", e.getRecordId().toString());
+            maps.add(stringStringMap);
+        }
+        return maps;
     }
 }
 

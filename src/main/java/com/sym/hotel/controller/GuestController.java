@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -114,5 +115,13 @@ public class GuestController {
     @PostMapping("lookUpMoney")
     public double lookUpMoney(){
         return hotelService.lookUpMoney();
+    }
+    @PostMapping("evaluate")
+    public String evaluate(@RequestParam("statement")String statement, @RequestParam("picture")String picture, @RequestParam("score") String score, @RequestParam("video") String video, @RequestParam("recordId")int recordId){
+        return hotelService.evaluate(statement,picture,score,video,recordId);
+    }
+    @PostMapping("showEvaluation")
+    public List<Map<String, String>> showEvaluation(int hotelId){
+        return hotelService.showEvaluation(hotelId);
     }
 }
