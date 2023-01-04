@@ -137,7 +137,6 @@ public class GuestService implements UserDetailsService {
 
     // 直接默认能走到这就是超级大管理员了，啥都返回吧，摆了
     public List<Record> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
-        System.out.println(startTime);
         if(roomNum == -1){
             LambdaQueryWrapper<Record> recordLambdaQueryWrapper;
             if(guestId == -1) {

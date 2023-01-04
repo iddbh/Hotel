@@ -132,7 +132,7 @@ public class GuestController {
     // 下面是manager controller里的东西，因为暂时无法处理跨域，先放到这里来
     @PostMapping("/selectRecordInfo")
     public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
-                                         @RequestParam(value = "guestId", defaultValue = "-1") int guestId,
+                                         @RequestParam(value = "guestId", defaultValue = "-1") Integer guestId,
                                          @RequestParam(value = "startTime", defaultValue = "2000-01-01") String start,
                                          @RequestParam(value = "endTime", defaultValue = "2100-12-31") String end,
                                          @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) throws ParseException {
