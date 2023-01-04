@@ -145,7 +145,7 @@ public class HotelServiceImpl implements HotelService {
             return new ResponseResult(200, "ok", "积分余额不足");
         }
         double left = integral - goods.getIntegral();
-        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().set(Guest::getIntegral, left));
+        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getIntegral, left));
         return new ResponseResult(200, "ok", "成功购买");
     }
 
