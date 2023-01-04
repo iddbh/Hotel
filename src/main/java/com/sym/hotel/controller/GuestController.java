@@ -2,7 +2,9 @@ package com.sym.hotel.controller;
 
 import com.sym.hotel.Service.HotelService;
 import com.sym.hotel.Service.imp.GuestService;
+import com.sym.hotel.Service.imp.ManagerServiceImp;
 import com.sym.hotel.Service.imp.MessageService;
+import com.sym.hotel.Service.imp.returnClass.Analyse;
 import com.sym.hotel.Service.imp.returnClass.SerAndPri;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.domain.ResponseResult;
@@ -32,6 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class GuestController {
     @Autowired
     private GuestService guestService;
+    @Autowired
+    private ManagerServiceImp managerService;
 
     @RequestMapping("/record")
     public List<ReturnRecord> viewRecord() {
@@ -123,5 +127,28 @@ public class GuestController {
     @PostMapping("showEvaluation")
     public List<Map<String, String>> showEvaluation(int hotelId){
         return hotelService.showEvaluation(hotelId);
+    }
+
+    // 下面是manager controller里的东西，因为暂时无法处理跨域，先放到这里来
+    @PostMapping("/selectRecordInfo")
+    public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
+                                         @RequestParam(value = "guestId", defaultValue = "-1") int guestId,
+                                         @RequestParam(value = "startTime", defaultValue = "1999-01-01") String start,
+                                         @RequestParam(value = "endTime", defaultValue = "2100-12-31") String end,
+                                         @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) throws ParseException {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date startTime = fmt.parse(start);
+        Date endTime = fmt.parse(end);
+        if(roomNum != -1)
+            return managerService.selectRecordInfo(guestId, startTime, endTime);
+        return managerService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
+    }
+
+    @PostMapping("/moneyAnalyse")
+    public List<Analyse> moneyGet(@RequestParam("hotelId") Integer hotelId, @RequestParam("startTime") String start, @RequestParam("endTime") String end) throws ParseException {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date startTime = fmt.parse(start);
+        Date endTime = fmt.parse(end);
+        return managerService.moneyGet(hotelId, startTime, endTime);
     }
 }
