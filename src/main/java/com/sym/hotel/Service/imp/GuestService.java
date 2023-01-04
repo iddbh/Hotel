@@ -3,7 +3,9 @@ package com.sym.hotel.Service.imp;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.sym.hotel.Service.imp.returnClass.Analyse;
 import com.sym.hotel.Service.imp.returnClass.ReturnRecord;
+import com.sym.hotel.Service.imp.returnClass.Selected;
 import com.sym.hotel.Service.imp.returnClass.SerAndPri;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.mapper.*;
@@ -132,5 +134,79 @@ public class GuestService implements UserDetailsService {
         } else {
             return new ResponseResult(200, "此房间该时段内已被预订，请您重新选择");
         }
+    }
+
+    // 直接默认能走到这就是超级大管理员了，啥都返回吧，摆了
+    public List<Selected> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
+        List<Record> recordList;
+        if(roomNum == -1){
+            LambdaQueryWrapper<Record> recordLambdaQueryWrapper;
+            if(guestId == -1) {
+                recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime);
+            }
+            else {
+                recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
+                        .eq(Record::getGuestId, guestId)
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime);
+            }
+            recordList =  recordMapper.selectList(recordLambdaQueryWrapper);
+        }
+        else {
+            if (guestId == -1) {
+                recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
+                        .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                        .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                        .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
+                        .eq(Hotel::getId, hotelId)
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime));
+            } else
+                recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
+                        .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                        .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                        .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
+                        .eq(Hotel::getId, hotelId)
+                        .eq(Record::getGuestId, guestId)
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime));
+        }
+        List<Selected> selectedList = new ArrayList<>();
+        for(Record r : recordList){
+            Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getId, r.getRoomId()));
+            boolean isOver = (new Date().getTime() < r.getBookEndTime().getTime());
+            Type type = typeMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getId, room.getRoomTypeId()));
+            selectedList.add(new Selected(r.getId(), r.getGuestId(), room.getRoomNum(), r.getBookStartTime(), r.getBookEndTime(),type.getPrice(), isOver));
+        }
+        return selectedList;
+    }
+
+    // 营业额分析，摆了
+    public List<Analyse> moneyGet(int hotelId, Date startTime, Date endTime){
+        List<Analyse> returnList = new ArrayList<>();
+        List<Type> roomTypes = typeMapper.selectList(new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId));
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(startTime);
+        for(Date d = startTime; d.before(endTime);){
+            for(Type t : roomTypes){
+                double money;
+                String typeName = t.getRoomType();
+                List<Record> recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
+                        .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                        .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                        .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId)
+                        .eq(Hotel::getId, hotelId).eq(Type::getRoomType, typeName)
+                        .le(Record::getBookStartTime, d)
+                        .ge(Record::getBookEndTime, d));
+                money = t.getPrice() * recordList.size();
+                if(money != 0.0)
+                    returnList.add(new Analyse(d, typeName, money));
+            }
+            calendar.add(Calendar.DATE, 1);
+            d = calendar.getTime();
+        }
+        return returnList;
     }
 }
