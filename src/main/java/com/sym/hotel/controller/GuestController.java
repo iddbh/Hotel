@@ -150,6 +150,10 @@ public class GuestController {
         Date endTime = fmt.parse(end);
         return guestService.moneyGet(hotelId, startTime, endTime);
     }
+    @PostMapping("lookUpIntegral")
+    public double lookUpIntegral(){
+        return hotelService.lookUpIntegral();
+    }
 
     @PostMapping("/dayAnalyse")
     public Map<String, Double> moneyDay(@RequestParam("hotelId") Integer hotelId, @RequestParam("day") String day) throws ParseException {
