@@ -23,8 +23,6 @@ import java.util.*;
 public class ManagerServiceImp {
     @Autowired
     private TypeMapper typeMapper;
-    @Autowired
-    private RecordMapper recordMapper;
 
     public ResponseResult changeHotelInfo(int id, int hotelId, double price, String message) {
         //返回一个type

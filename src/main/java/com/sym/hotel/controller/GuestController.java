@@ -133,7 +133,7 @@ public class GuestController {
     @PostMapping("/selectRecordInfo")
     public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
                                          @RequestParam(value = "guestId", defaultValue = "-1") int guestId,
-                                         @RequestParam(value = "startTime", defaultValue = "1999-01-01") String start,
+                                         @RequestParam(value = "startTime", defaultValue = "2000-01-01") String start,
                                          @RequestParam(value = "endTime", defaultValue = "2100-12-31") String end,
                                          @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) throws ParseException {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");

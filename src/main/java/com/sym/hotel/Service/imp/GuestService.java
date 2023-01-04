@@ -137,34 +137,41 @@ public class GuestService implements UserDetailsService {
 
     // 直接默认能走到这就是超级大管理员了，啥都返回吧，摆了
     public List<Record> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
+        System.out.println(startTime);
         if(roomNum == -1){
             LambdaQueryWrapper<Record> recordLambdaQueryWrapper;
             if(guestId == -1) {
                 recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
-                        .le(Record::getBookStartTime, startTime)
-                        .ge(Record::getBookEndTime, endTime);
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime);
             }
             else {
                 recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
                         .eq(Record::getGuestId, guestId)
-                        .le(Record::getBookStartTime, startTime)
-                        .ge(Record::getBookEndTime, endTime);
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime);
             }
             return recordMapper.selectList(recordLambdaQueryWrapper);
         }
         List<Record> recordList;
         if(guestId == -1) {
             recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
-                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId).eq(Room::getRoomNum, roomNum)
-                    .le(Record::getBookStartTime, startTime)
-                    .ge(Record::getBookEndTime, endTime));
+                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                    .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                    .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
+                    .eq(Hotel::getId, hotelId)
+                    .le(Record::getBookStartTime, endTime)
+                    .ge(Record::getBookEndTime, startTime));
         }
         else
             recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
-                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId).eq(Room::getRoomNum, roomNum)
+                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                    .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                    .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
+                    .eq(Hotel::getId, hotelId)
                     .eq(Record::getGuestId, guestId)
-                    .le(Record::getBookStartTime, startTime)
-                    .ge(Record::getBookEndTime, endTime));
+                    .le(Record::getBookStartTime, endTime)
+                    .ge(Record::getBookEndTime, startTime));
         return recordList;
     }
 
