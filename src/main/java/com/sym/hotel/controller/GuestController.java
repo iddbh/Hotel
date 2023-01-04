@@ -42,8 +42,8 @@ public class GuestController {
         return guestService.serAndPri(roomNum, hotelId);
     }
     @RequestMapping("/modify")
-    public ResponseResult modifyRoom(@RequestParam("record") Integer recordId, @RequestParam("room") Integer roomId, @RequestParam("price") Double price, @RequestParam("service") String service){
-        return guestService.modifyRoom(recordId, roomId, price, service);
+    public ResponseResult modifyRoom(@RequestParam("roomNum") Integer roomNum, @RequestParam("hotel") Integer hotelId, @RequestParam("price") Double price, @RequestParam("service") String service){
+        return guestService.modifyRoom(roomNum, hotelId, price, service);
     }
     @Autowired
     public com.sym.hotel.Service.imp.addData adddata;
