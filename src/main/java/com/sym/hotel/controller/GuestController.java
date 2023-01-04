@@ -5,6 +5,7 @@ import com.sym.hotel.Service.imp.GuestService;
 import com.sym.hotel.Service.imp.ManagerServiceImp;
 import com.sym.hotel.Service.imp.MessageService;
 import com.sym.hotel.Service.imp.returnClass.Analyse;
+import com.sym.hotel.Service.imp.returnClass.Selected;
 import com.sym.hotel.Service.imp.returnClass.SerAndPri;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.domain.ResponseResult;
@@ -131,11 +132,11 @@ public class GuestController {
 
     // 下面是manager controller里的东西，因为暂时无法处理跨域，先放到这里来
     @PostMapping("/selectRecordInfo")
-    public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
-                                         @RequestParam(value = "guestId", defaultValue = "-1") Integer guestId,
-                                         @RequestParam(value = "startTime", defaultValue = "2000-01-01") String start,
-                                         @RequestParam(value = "endTime", defaultValue = "2100-12-31") String end,
-                                         @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) throws ParseException {
+    public List<Selected> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
+                                           @RequestParam(value = "guestId", defaultValue = "-1") Integer guestId,
+                                           @RequestParam(value = "startTime", defaultValue = "2000-01-01") String start,
+                                           @RequestParam(value = "endTime", defaultValue = "2100-12-31") String end,
+                                           @RequestParam(value = "roomNum", defaultValue = "-1") Integer roomNum) throws ParseException {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date startTime = fmt.parse(start);
         Date endTime = fmt.parse(end);

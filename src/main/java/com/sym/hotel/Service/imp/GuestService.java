@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.sym.hotel.Service.imp.returnClass.Analyse;
 import com.sym.hotel.Service.imp.returnClass.ReturnRecord;
+import com.sym.hotel.Service.imp.returnClass.Selected;
 import com.sym.hotel.Service.imp.returnClass.SerAndPri;
 import com.sym.hotel.domain.LoginGuest;
 import com.sym.hotel.mapper.*;
@@ -136,7 +137,8 @@ public class GuestService implements UserDetailsService {
     }
 
     // 直接默认能走到这就是超级大管理员了，啥都返回吧，摆了
-    public List<Record> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
+    public List<Selected> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
+        List<Record> recordList;
         if(roomNum == -1){
             LambdaQueryWrapper<Record> recordLambdaQueryWrapper;
             if(guestId == -1) {
@@ -150,28 +152,35 @@ public class GuestService implements UserDetailsService {
                         .le(Record::getBookStartTime, endTime)
                         .ge(Record::getBookEndTime, startTime);
             }
-            return recordMapper.selectList(recordLambdaQueryWrapper);
+            recordList =  recordMapper.selectList(recordLambdaQueryWrapper);
         }
-        List<Record> recordList;
-        if(guestId == -1) {
-            recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
-                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
-                    .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
-                    .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
-                    .eq(Hotel::getId, hotelId)
-                    .le(Record::getBookStartTime, endTime)
-                    .ge(Record::getBookEndTime, startTime));
+        else {
+            if (guestId == -1) {
+                recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
+                        .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                        .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                        .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
+                        .eq(Hotel::getId, hotelId)
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime));
+            } else
+                recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
+                        .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                        .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
+                        .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
+                        .eq(Hotel::getId, hotelId)
+                        .eq(Record::getGuestId, guestId)
+                        .le(Record::getBookStartTime, endTime)
+                        .ge(Record::getBookEndTime, startTime));
         }
-        else
-            recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
-                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
-                    .leftJoin(Type.class, Type::getId, Room::getRoomTypeId)
-                    .leftJoin(Hotel.class, Hotel::getId, Type::getHotelId).eq(Room::getRoomNum, roomNum)
-                    .eq(Hotel::getId, hotelId)
-                    .eq(Record::getGuestId, guestId)
-                    .le(Record::getBookStartTime, endTime)
-                    .ge(Record::getBookEndTime, startTime));
-        return recordList;
+        List<Selected> selectedList = new ArrayList<>();
+        for(Record r : recordList){
+            Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getId, r.getRoomId()));
+            boolean isOver = (new Date().getTime() < r.getBookEndTime().getTime());
+            Type type = typeMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getId, room.getRoomTypeId()));
+            selectedList.add(new Selected(r.getId(), r.getGuestId(), room.getRoomNum(), r.getBookStartTime(), r.getBookEndTime(),type.getPrice(), isOver));
+        }
+        return selectedList;
     }
 
     // 营业额分析，摆了
