@@ -135,25 +135,23 @@ public class GuestService implements UserDetailsService {
         }
     }
 
-    public List<Record> selectRecordInfo(int guestId, Date startTime, Date endTime) {
-        LambdaQueryWrapper<Record> recordLambdaQueryWrapper;
-        if(guestId == -1) {
-            recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
-                    .le(Record::getBookStartTime, startTime)
-                    .ge(Record::getBookEndTime, endTime);
-        }
-        else {
-            recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
-                    .eq(Record::getGuestId, guestId)
-                    .le(Record::getBookStartTime, startTime)
-                    .ge(Record::getBookEndTime, endTime);
-        }
-        return recordMapper.selectList(recordLambdaQueryWrapper);
-    }
-
     // 直接默认能走到这就是超级大管理员了，啥都返回吧，摆了
     public List<Record> recordByRoom(int roomNum, int hotelId, int guestId, Date startTime, Date endTime){
-        //Todo: 前后端对接
+        if(roomNum == -1){
+            LambdaQueryWrapper<Record> recordLambdaQueryWrapper;
+            if(guestId == -1) {
+                recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
+                        .le(Record::getBookStartTime, startTime)
+                        .ge(Record::getBookEndTime, endTime);
+            }
+            else {
+                recordLambdaQueryWrapper = new LambdaQueryWrapper<Record>()
+                        .eq(Record::getGuestId, guestId)
+                        .le(Record::getBookStartTime, startTime)
+                        .ge(Record::getBookEndTime, endTime);
+            }
+            return recordMapper.selectList(recordLambdaQueryWrapper);
+        }
         List<Record> recordList;
         if(guestId == -1) {
             recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()

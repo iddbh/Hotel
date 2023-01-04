@@ -139,8 +139,6 @@ public class GuestController {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date startTime = fmt.parse(start);
         Date endTime = fmt.parse(end);
-        if(roomNum != -1)
-            return guestService.selectRecordInfo(guestId, startTime, endTime);
         return guestService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
     }
 
