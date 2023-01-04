@@ -150,4 +150,11 @@ public class GuestController {
         Date endTime = fmt.parse(end);
         return guestService.moneyGet(hotelId, startTime, endTime);
     }
+
+    @PostMapping("/dayAnalyse")
+    public Map<String, Double> moneyDay(@RequestParam("hotelId") Integer hotelId, @RequestParam("day") String day) throws ParseException {
+        DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = fmt.parse(day);
+        return guestService.moneyDay(hotelId, date);
+    }
 }
