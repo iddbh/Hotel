@@ -25,4 +25,5 @@ public interface HotelService {
     List<Integer> showStars();
     String evaluate(String statement, String picture, String score, String video, int recordId);
     public List<Map<String, String>> showEvaluation(int hotelId);
+    public double lookUpIntegral();
 }

@@ -124,4 +124,8 @@ public class GuestController {
     public List<Map<String, String>> showEvaluation(int hotelId){
         return hotelService.showEvaluation(hotelId);
     }
+    @PostMapping("lookUpIntegral")
+    public double lookUpIntegral(){
+        return hotelService.lookUpIntegral();
+    }
 }

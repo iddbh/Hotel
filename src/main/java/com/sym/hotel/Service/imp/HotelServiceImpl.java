@@ -240,5 +240,12 @@ public class HotelServiceImpl implements HotelService {
         }
         return maps;
     }
+    public double lookUpIntegral(){
+        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
+        Integer guestId = loginGuest.getGuest().getId();
+        Guest guest = guestMapper.selectOne(new LambdaQueryWrapper<Guest>().eq(Guest::getId, guestId));
+        return guest.getIntegral();
+    }
 }
 
