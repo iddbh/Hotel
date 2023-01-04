@@ -6,10 +6,7 @@ import com.sym.hotel.Service.imp.returnClass.Analyse;
 import com.sym.hotel.pojo.Record;
 import com.sym.hotel.domain.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,17 +15,18 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@RequestMapping("/manager")
+@CrossOrigin(origins = "*")
 public class ManagerController {
     @Autowired
     private ManagerServiceImp managerService;
 
-    @PostMapping("ChangeHotelInfo")
+    @PostMapping("/ChangeHotelInfo")
     public ResponseResult changeHotelInfo(@RequestParam("id") int id, @RequestParam("hotelId") int hotelId, @RequestParam("price") double price, @RequestParam("service") String service) {
         return managerService.changeHotelInfo(id, hotelId, price, service);
     }
 
-    @PostMapping("SelectRecordInfo")
+    @PostMapping("/selectRecordInfo")
     public List<Record> selectRecordInfo(@RequestParam("hotelId") Integer hotelId,
                                          @RequestParam(value = "guestId", defaultValue = "-1") int guestId,
                                          @RequestParam(value = "startTime", defaultValue = "1999-01-01") String start,
