@@ -140,8 +140,8 @@ public class GuestController {
         Date startTime = fmt.parse(start);
         Date endTime = fmt.parse(end);
         if(roomNum != -1)
-            return managerService.selectRecordInfo(guestId, startTime, endTime);
-        return managerService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
+            return guestService.selectRecordInfo(guestId, startTime, endTime);
+        return guestService.recordByRoom(roomNum, hotelId, guestId, startTime, endTime);
     }
 
     @PostMapping("/moneyAnalyse")
@@ -149,6 +149,6 @@ public class GuestController {
         DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
         Date startTime = fmt.parse(start);
         Date endTime = fmt.parse(end);
-        return managerService.moneyGet(hotelId, startTime, endTime);
+        return guestService.moneyGet(hotelId, startTime, endTime);
     }
 }
