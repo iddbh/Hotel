@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class Analyse {
-    private Date beginDate;
-    private String roomType;
+    private Date day;
+    private int hotelId;
     private double money;
 }

@@ -190,8 +190,8 @@ public class GuestService implements UserDetailsService {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startTime);
         for(Date d = startTime; d.before(endTime);){
+            double money = 0.0;
             for(Type t : roomTypes){
-                double money;
                 String typeName = t.getRoomType();
                 List<Record> recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
                         .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
@@ -200,13 +200,31 @@ public class GuestService implements UserDetailsService {
                         .eq(Hotel::getId, hotelId).eq(Type::getRoomType, typeName)
                         .le(Record::getBookStartTime, d)
                         .ge(Record::getBookEndTime, d));
-                money = t.getPrice() * recordList.size();
-                if(money != 0.0)
-                    returnList.add(new Analyse(d, typeName, money));
+                money += t.getPrice() * recordList.size();
             }
+            if(money != 0.0)
+                returnList.add(new Analyse(d, hotelId, money));
             calendar.add(Calendar.DATE, 1);
             d = calendar.getTime();
         }
         return returnList;
+    }
+
+    public Map<String, Double> moneyDay(int hotelId, Date day){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(day);
+        calendar.add(Calendar.DATE, 1);
+        Date tomorrow = calendar.getTime();
+        HashMap<String, Double> returnMap = new HashMap<>();
+        List<Type> typeList = typeMapper.selectList(new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId));
+        for(Type t : typeList){
+            List<Record> recordList = recordMapper.selectJoinList(Record.class, new MPJLambdaWrapper<Record>()
+                    .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
+                    .eq(Room::getRoomTypeId, t.getId())
+                    .le(Record::getBookStartTime, day)
+                    .ge(Record::getBookEndTime, tomorrow));
+            returnMap.put(t.getRoomType(), recordList.size() * t.getPrice());
+        }
+        return returnMap;
     }
 }
