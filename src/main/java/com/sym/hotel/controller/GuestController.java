@@ -163,7 +163,7 @@ public class GuestController {
     }
 
     @RequestMapping("/averageMark")
-    public Map<Integer, Integer> averageMark(){
+    public Map<String, Integer> averageMark(){
         return guestService.averageMark();
     }
 }

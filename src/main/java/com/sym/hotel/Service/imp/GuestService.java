@@ -233,8 +233,8 @@ public class GuestService implements UserDetailsService {
     }
 
     // 查看酒店的评分
-    public Map<Integer, Integer> averageMark(){
-        Map<Integer, Integer> returnMap = new HashMap<>();
+    public Map<String, Integer> averageMark(){
+        Map<String, Integer> returnMap = new HashMap<>();
         List<Hotel> hotelList = hotelMapper.selectList(new LambdaQueryWrapper<>());
         for(Hotel h : hotelList){
             double mark = 0.0;
@@ -243,7 +243,7 @@ public class GuestService implements UserDetailsService {
                 mark += ev.getScore();
             if(evList.size() == 0) mark = 0.0;
             else mark /= evList.size();
-            returnMap.put(h.getId(), (int) Math.round(mark));
+            returnMap.put("ht" + (h.getId()), (int) Math.round(mark));
         }
         return returnMap;
     }
