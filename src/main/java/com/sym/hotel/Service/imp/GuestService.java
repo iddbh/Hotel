@@ -35,6 +35,8 @@ public class GuestService implements UserDetailsService {
     private RecordMapper recordMapper;
     @Autowired
     private HotelMapper hotelMapper;
+    @Autowired
+    private EvaluationMapper evaluationMapper;
 //    private UserinfoMapper userinfoMapper;
 
 
@@ -226,6 +228,22 @@ public class GuestService implements UserDetailsService {
                     .le(Record::getBookStartTime, day)
                     .ge(Record::getBookEndTime, tomorrow));
             returnMap.put(t.getRoomType(), recordList.size() * t.getPrice());
+        }
+        return returnMap;
+    }
+
+    // 查看酒店的评分
+    public Map<Integer, Integer> averageMark(){
+        Map<Integer, Integer> returnMap = new HashMap<>();
+        List<Hotel> hotelList = hotelMapper.selectList(new LambdaQueryWrapper<>());
+        for(Hotel h : hotelList){
+            double mark = 0.0;
+            List<Evaluation> evList = evaluationMapper.selectList(new LambdaQueryWrapper<Evaluation>().eq(Evaluation::getHotelId, h.getId()));
+            for(Evaluation ev : evList)
+                mark += ev.getScore();
+            if(evList.size() == 0) mark = 0.0;
+            else mark /= evList.size();
+            returnMap.put(h.getId(), (int) Math.round(mark));
         }
         return returnMap;
     }

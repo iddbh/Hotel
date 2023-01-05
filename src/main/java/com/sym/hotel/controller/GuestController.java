@@ -161,4 +161,9 @@ public class GuestController {
         Date date = fmt.parse(day);
         return guestService.moneyDay(hotelId, date);
     }
+
+    @RequestMapping("/averageMark")
+    public Map<Integer, Integer> averageMark(){
+        return guestService.averageMark();
+    }
 }
