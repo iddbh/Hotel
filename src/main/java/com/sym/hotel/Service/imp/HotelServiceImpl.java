@@ -230,19 +230,30 @@ public class HotelServiceImpl implements HotelService {
         for (Evaluation e : evaluations) {
             Record record = recordMapper.selectOne(new LambdaQueryWrapper<Record>().eq(Record::getId, e.getRecordId()));
             Map<String, String> stringStringMap = new HashMap<>();
-            if(record.getBookStartTime().getDate()>=10){
-                stringStringMap.put("startTime",(record.getBookStartTime().getYear()+1900)+"-"+(record.getBookStartTime().getMonth()+1)+"-"+record.getBookStartTime().getDate());
-
+            String temp1="";
+            String temp2="";
+            if(record.getBookStartTime().getMonth()+1>=10){
+                temp1="-";
             }else {
-                stringStringMap.put("startTime", (record.getBookStartTime().getYear() + 1900) + "-" + (record.getBookStartTime().getMonth() + 1) + "-0" + record.getBookStartTime().getDate());
+                temp1="-0";
+            }
+            if(record.getBookStartTime().getDate()>=10){
+                temp2="-";
+            }else {
+                temp2="-0";
+            }
+            stringStringMap.put("startTime",(record.getBookStartTime().getYear()+1900)+temp1+(record.getBookStartTime().getMonth()+1)+temp2+record.getBookStartTime().getDate());
+            if(record.getBookEndTime().getMonth()+1>=10){
+                temp1="-";
+            }else {
+                temp1="-0";
             }
             if(record.getBookEndTime().getDate()>=10){
-                stringStringMap.put("endTime",(record.getBookEndTime().getYear()+1900)+"-"+(record.getBookEndTime().getMonth()+1)+"-"+record.getBookEndTime().getDate());
-
-            }else{
-                stringStringMap.put("endTime",(record.getBookEndTime().getYear()+1900)+"-"+(record.getBookEndTime().getMonth()+1)+"-0"+record.getBookEndTime().getDate());
-
+                temp2="-";
+            }else {
+                temp2="-0";
             }
+            stringStringMap.put("startTime",(record.getBookEndTime().getYear()+1900)+temp1+(record.getBookEndTime().getMonth()+1)+temp2+record.getBookEndTime().getDate());
             Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getId, record.getRoomId()));
             stringStringMap.put("roomNum",room.getRoomNum().toString());
             stringStringMap.put("hotelId", e.getHotelId().toString());
