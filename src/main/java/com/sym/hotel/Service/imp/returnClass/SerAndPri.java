@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class SerAndPri {
     private String service;
     private double price;
+    private boolean isOver;
 }

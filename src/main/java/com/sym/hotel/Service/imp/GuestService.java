@@ -115,7 +115,13 @@ public class GuestService implements UserDetailsService {
     public SerAndPri serAndPri(int roomNum, int hotelId) {
         // 连表查询！
         Type type = typeMapper.selectJoinOne(Type.class, new MPJLambdaWrapper<Type>().selectAll(Type.class).leftJoin(Room.class, Room::getRoomTypeId, Type::getId).eq(Room::getRoomNum, roomNum).eq(Type::getHotelId, hotelId));
-        return new SerAndPri(type.getService(), type.getPrice());
+        List<Record> record = recordMapper.selectList(new LambdaQueryWrapper<Record>().ge(Record::getBookEndTime, new Date()).le(Record::getBookStartTime, new Date()));
+        boolean isOver = false;
+        for(Record r : record){
+            int roomId = r.getRoomId();
+            Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getRoomNum, roomNum));
+        }
+        return new SerAndPri(type.getService(), type.getPrice(), isOver);
     }
 
     // 管理员修改酒店信息
@@ -193,7 +199,7 @@ public class GuestService implements UserDetailsService {
         List<Type> roomTypes = typeMapper.selectList(new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId));
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(startTime);
-        for(Date d = startTime; d.before(endTime);){
+        for(Date d = startTime; d.before(DayP1(endTime));){
             double money = 0.0;
             for(Type t : roomTypes){
                 String typeName = t.getRoomType();
