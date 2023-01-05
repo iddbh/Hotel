@@ -223,10 +223,6 @@ public class GuestService implements UserDetailsService {
     }
 
     public Map<String, Double> moneyDay(int hotelId, Date day){
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(day);
-        calendar.add(Calendar.DATE, 1);
-        Date tomorrow = calendar.getTime();
         HashMap<String, Double> returnMap = new HashMap<>();
         List<Type> typeList = typeMapper.selectList(new LambdaQueryWrapper<Type>().eq(Type::getHotelId, hotelId));
         for(Type t : typeList){
@@ -234,7 +230,7 @@ public class GuestService implements UserDetailsService {
                     .selectAll(Record.class).leftJoin(Room.class, Room::getId, Record::getRoomId)
                     .eq(Room::getRoomTypeId, t.getId())
                     .le(Record::getBookStartTime, day)
-                    .ge(Record::getBookEndTime, tomorrow));
+                    .ge(Record::getBookEndTime, day));
             returnMap.put(t.getRoomType(), recordList.size() * t.getPrice());
         }
         return returnMap;
