@@ -16,9 +16,7 @@ public class Evaluation {
     private String statement;
     private String picture;
     private String video;
-    private Integer score;
+    private Double score;
     private Integer hotelId;
     private Integer guestId;
-
-
 }

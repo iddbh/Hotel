@@ -217,7 +217,7 @@ public class HotelServiceImpl implements HotelService {
         evaluation.setGuestId(guestId);
         evaluation.setPicture(picture);
         evaluation.setVideo(video);
-        evaluation.setScore(Integer.parseInt(score));
+        evaluation.setScore(Double.parseDouble(score));
         evaluation.setRecordId(recordId);
         evaluation.setStatement(statement);
         evaluationMapper.insert(evaluation);
