@@ -116,12 +116,14 @@ public class GuestService implements UserDetailsService {
         // 连表查询！
         Type type = typeMapper.selectJoinOne(Type.class, new MPJLambdaWrapper<Type>().selectAll(Type.class).leftJoin(Room.class, Room::getRoomTypeId, Type::getId).eq(Room::getRoomNum, roomNum).eq(Type::getHotelId, hotelId));
         List<Record> record = recordMapper.selectList(new LambdaQueryWrapper<Record>().ge(Record::getBookEndTime, new Date()).le(Record::getBookStartTime, new Date()));
-        boolean isOver = false;
+        boolean zhanYong = false;
         for(Record r : record){
             int roomId = r.getRoomId();
-            Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getRoomNum, roomNum));
+            Room room = roomMapper.selectJoinOne(Room.class, new MPJLambdaWrapper<Room>().selectAll(Room.class)
+                    .leftJoin(Type.class, Type::getId, Room::getRoomTypeId).eq(Room::getRoomNum, roomNum).eq(Type::getHotelId, hotelId));
+            if(room.getId() == roomId) zhanYong = true;
         }
-        return new SerAndPri(type.getService(), type.getPrice(), isOver);
+        return new SerAndPri(type.getService(), type.getPrice(), zhanYong);
     }
 
     // 管理员修改酒店信息
@@ -213,7 +215,7 @@ public class GuestService implements UserDetailsService {
                 money += t.getPrice() * recordList.size();
             }
             if(money != 0.0)
-                returnList.add(new Analyse(d, hotelId, money));
+                returnList.add(new Analyse(DayP1(d), hotelId, money));
             calendar.add(Calendar.DATE, 1);
             d = calendar.getTime();
         }
