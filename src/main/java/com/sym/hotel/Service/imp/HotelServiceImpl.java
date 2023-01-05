@@ -228,7 +228,11 @@ public class HotelServiceImpl implements HotelService {
         ArrayList<Map<String, String>> maps = new ArrayList<>();
         List<Evaluation> evaluations = evaluationMapper.selectList(new LambdaQueryWrapper<Evaluation>().eq(Evaluation::getHotelId, hotelId));
         for (Evaluation e : evaluations) {
+            Record record = recordMapper.selectOne(new LambdaQueryWrapper<Record>().eq(Record::getId, e.getRecordId()));
             Map<String, String> stringStringMap = new HashMap<>();
+            stringStringMap.put("startTime",record.getBookStartTime().toString());
+            stringStringMap.put("endTime",record.getBookEndTime().toString());
+            stringStringMap.put("roomId",record.getRoomId().toString());
             stringStringMap.put("hotelId", e.getHotelId().toString());
             stringStringMap.put("statement", e.getStatement());
             stringStringMap.put("picture", e.getPicture());
