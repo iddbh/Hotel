@@ -80,6 +80,7 @@ public class GuestService implements UserDetailsService {
     public List<ReturnRecord> viewRecord() {
         // 这里没有使用连表查询，可以改进。屎山！！！！！！！
         UsernamePasswordAuthenticationToken authentication;
+        Calendar calendar = new GregorianCalendar();
         try {
             authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         } catch (Exception e) {
@@ -104,7 +105,7 @@ public class GuestService implements UserDetailsService {
             Hotel hotel = hotelMapper.selectOne(hotelLambdaQueryWrapper);
             int recordId = re.getId();
             boolean isOver = (new Date().getTime() < re.getBookEndTime().getTime());
-            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelId, re.getBookStartTime(), re.getBookEndTime(), recordId, isOver, room.getRoomNum()));
+            rrl.add(new ReturnRecord(id, roomId, price, typeInfo, hotelId, DayP1(re.getBookStartTime()), DayP1(re.getBookEndTime()), recordId, isOver, room.getRoomNum()));
         }
         return rrl;
     }
@@ -178,7 +179,8 @@ public class GuestService implements UserDetailsService {
             Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getId, r.getRoomId()));
             boolean isOver = (new Date().getTime() < r.getBookEndTime().getTime());
             Type type = typeMapper.selectOne(new LambdaQueryWrapper<Type>().eq(Type::getId, room.getRoomTypeId()));
-            selectedList.add(new Selected(r.getId(), r.getGuestId(), room.getRoomNum(), r.getBookStartTime(), r.getBookEndTime(),type.getPrice(), isOver));
+
+            selectedList.add(new Selected(r.getId(), r.getGuestId(), room.getRoomNum(), DayP1(r.getBookStartTime()), DayP1(r.getBookEndTime()),type.getPrice(), isOver));
         }
         return selectedList;
     }
@@ -226,5 +228,12 @@ public class GuestService implements UserDetailsService {
             returnMap.put(t.getRoomType(), recordList.size() * t.getPrice());
         }
         return returnMap;
+    }
+
+    public Date DayP1(Date date){
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        return calendar.getTime();
     }
 }
