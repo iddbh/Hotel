@@ -145,7 +145,7 @@ public class HotelServiceImpl implements HotelService {
             return new ResponseResult(200, "ok", "积分余额不足");
         }
         double left = integral - goods.getIntegral();
-        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId,guestId).set(Guest::getIntegral, left));
+        guestMapper.update(guest, new LambdaUpdateWrapper<Guest>().eq(Guest::getId, guestId).set(Guest::getIntegral, left));
         return new ResponseResult(200, "ok", "成功购买");
     }
 
@@ -230,32 +230,32 @@ public class HotelServiceImpl implements HotelService {
         for (Evaluation e : evaluations) {
             Record record = recordMapper.selectOne(new LambdaQueryWrapper<Record>().eq(Record::getId, e.getRecordId()));
             Map<String, String> stringStringMap = new HashMap<>();
-            String temp1="";
-            String temp2="";
-            if(record.getBookStartTime().getMonth()+1>=10){
-                temp1="-";
-            }else {
-                temp1="-0";
+            String temp1 = "";
+            String temp2 = "";
+            if (record.getBookStartTime().getMonth() + 1 >= 10) {
+                temp1 = "-";
+            } else {
+                temp1 = "-0";
             }
-            if(record.getBookStartTime().getDate()>=10){
-                temp2="-";
-            }else {
-                temp2="-0";
+            if (record.getBookStartTime().getDate() >= 10) {
+                temp2 = "-";
+            } else {
+                temp2 = "-0";
             }
-            stringStringMap.put("startTime",(record.getBookStartTime().getYear()+1900)+temp1+(record.getBookStartTime().getMonth()+1)+temp2+record.getBookStartTime().getDate());
-            if(record.getBookEndTime().getMonth()+1>=10){
-                temp1="-";
-            }else {
-                temp1="-0";
+            stringStringMap.put("startTime", (record.getBookStartTime().getYear() + 1900) + temp1 + (record.getBookStartTime().getMonth() + 1) + temp2 + record.getBookStartTime().getDate());
+            if (record.getBookEndTime().getMonth() + 1 >= 10) {
+                temp1 = "-";
+            } else {
+                temp1 = "-0";
             }
-            if(record.getBookEndTime().getDate()>=10){
-                temp2="-";
-            }else {
-                temp2="-0";
+            if (record.getBookEndTime().getDate() >= 10) {
+                temp2 = "-";
+            } else {
+                temp2 = "-0";
             }
-            stringStringMap.put("startTime",(record.getBookEndTime().getYear()+1900)+temp1+(record.getBookEndTime().getMonth()+1)+temp2+record.getBookEndTime().getDate());
+            stringStringMap.put("endTime", (record.getBookEndTime().getYear() + 1900) + temp1 + (record.getBookEndTime().getMonth() + 1) + temp2 + record.getBookEndTime().getDate());
             Room room = roomMapper.selectOne(new LambdaQueryWrapper<Room>().eq(Room::getId, record.getRoomId()));
-            stringStringMap.put("roomNum",room.getRoomNum().toString());
+            stringStringMap.put("roomNum", room.getRoomNum().toString());
             stringStringMap.put("hotelId", e.getHotelId().toString());
             stringStringMap.put("statement", e.getStatement());
             stringStringMap.put("picture", e.getPicture());
@@ -267,7 +267,8 @@ public class HotelServiceImpl implements HotelService {
         }
         return maps;
     }
-    public double lookUpIntegral(){
+
+    public double lookUpIntegral() {
         UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         LoginGuest loginGuest = (LoginGuest) authentication.getPrincipal();
         Integer guestId = loginGuest.getGuest().getId();
